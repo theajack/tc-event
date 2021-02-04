@@ -1,18 +1,19 @@
 
-import {TCEvent} from './event';
-import {TEventName} from './type';
+import {Event} from './event';
+import {clearInterceptor} from './interceptor';
+import {IJson, TEventName} from './type';
 import {isUndf} from './util';
 
 
-let events: {[prop: string]: TCEvent} = {}; // 事件回调函数字典
-const EVENT: {[prop: string]: string} = {}; // 事件名称字典
+let events: IJson<Event> = {}; // 事件回调函数字典
+let EVENT: IJson<string> = {}; // 事件名称字典
 
 export function getEvent (name: TEventName) {
     return events[nameToStr(name)];
 }
 export function setEvent (eventName: TEventName) {
     const name = nameToStr(eventName);
-    events[name] = new TCEvent(name);
+    events[name] = new Event(name);
     EVENT[name] = name;
 }
 export function delEvent (eventName: TEventName) {
@@ -29,6 +30,8 @@ export function getEVENT (name?: TEventName) {
 
 export function clearEvent () {
     events = {};
+    EVENT = {};
+    clearInterceptor();
 }
 
 function nameToStr (eventName: TEventName) {

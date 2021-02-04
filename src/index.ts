@@ -2,8 +2,10 @@
 import {isObject, isUndf} from './util';
 import {TEventName, IEventListener, IEventRegistOption, IEventItem, IRegistObject, IJson} from './type';
 import {clearEvent, delEvent, getEVENT, getEvent, setEvent} from './event-pool';
+import version from './version';
+import {onRegist, onEmit} from './interceptor';
 
-export function checkEvent (name: TEventName) {
+function checkEvent (name: TEventName) {
     if (getEvent(name)) {
         return true;
     } else {
@@ -19,9 +21,13 @@ function init (name: TEventName) {
 }
 
 // 注册某个事件的一个或多个回调
+function regist(name: TEventName, listener: IEventListener | IEventRegistOption): IEventItem;
+function regist(name: IRegistObject, listener: IEventListener | IEventRegistOption): IEventItem;
+function regist(name: IJson<IEventRegistOption>): IJson<IEventItem>;
+
 function regist (
     name: TEventName | IRegistObject | IJson<IEventRegistOption>,
-    listener: IEventListener | IEventRegistOption
+    listener?: IEventListener | IEventRegistOption
 ): IEventItem | null | IJson<IEventItem> {
     // json 格式传入可以注册个事件
     if (isObject(name)) {
@@ -41,6 +47,7 @@ function regist (
     }
 }
 
+
 function registBase ({
     once = false, // 只触发一次
     all = true, // 始终起作用
@@ -56,6 +63,9 @@ function registBase ({
 }
 
 // 移除事件回调
+function remove (name: TEventName, cond: number | IEventListener, imme?: boolean): boolean;
+function remove (eventItem: IEventItem, imme?: boolean): boolean;
+
 function remove (
     name: TEventName | IEventItem,
     cond?: number | IEventListener | boolean,
@@ -119,66 +129,16 @@ function index (name: TEventName) {
     }
 }
 
-
-const event = {
+export default {
+    version,
     EVENT: getEVENT(), // 事件枚举
     // init, // 初始化一个事件（注册一个发布者） // 初始化与注册和到一起
     emit, // 触发事件
+    onEmit,
     regist, // 注册一个监听者
+    onRegist,
     checkEvent, // 检查是否存在事件
     remove,
     clear,
     index,
 };
-
-export default event;
-
-// function test () {
-//     let e1 = event.regist('aa', () => {
-//         console.log('1');
-//     });
-//     window.item = event.regist('aa', () => {
-//         console.log('2');
-//     });
-//     event.regist('aa', {
-//         index: 0, listener () {
-//             console.log('i0');
-//             event.remove(e1);
-//         }, once: true
-//     });
-//     event.regist('aa', {
-//         index: 2, listener () {console.log('2a');}, all: true
-//     });
-//     event.regist('aa', {
-//         index: 2, listener () {console.log('2b');}, indexBefore: true
-//     });
-//     event.regist('aa', {
-//         listener () {console.log('3');}, once: true, all: true
-//     });
-//     event.regist('aa', {
-//         listener () {console.log('1000');}, index: 1000
-//     });
-//     event.regist('aa', {
-//         listener () {console.log('4');}
-//     });
-//     event.regist('aa', {
-//         index: 0, listener () {console.log('ib0');}, indexBefore: true
-//     });
-//     event.regist('aa', {
-//         index: 0, listener () {console.log('ibb0');}, indexBefore: true
-//     });
-//     event.emit('aa');
-//     // ibb0
-//     // ib0
-//     // i0
-//     // 1
-//     // 2b
-//     // 2
-//     // 2a
-//     // 3
-//     // 4
-//     // 1000
-// }
-// window.test = test;
-// window.event = event;
-// window.events = events;

@@ -1,15 +1,23 @@
 const path = require('path');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const RunNodeWebpackPlugin = require('run-node-webpack-plugin');
+
+const fs = require('fs');
+const version = require('../package.json').version;
+
+fs.writeFileSync(path.resolve('./', 'src/version.ts'), `export default '${version}';`, 'utf8');
 
 module.exports = () => {
     return {
         mode: 'production',
         entry: path.resolve('./', 'src/index.ts'),
         output: {
-            path: path.resolve('./', 'dist'),
-            filename: 'ts-demo.min.js',
-            library: 'tsDemo',
+            path: path.resolve('./', 'npm'),
+            filename: 'tc-event.min.js',
+            library: 'TEvent',
             libraryTarget: 'umd',
             libraryExport: 'default',
+            globalObject: 'this',
         },
         resolve: {
             extensions: [ '.tsx', '.ts', '.js' ]
@@ -35,6 +43,18 @@ module.exports = () => {
                     configFile: './.eslintrc.js'
                 }
             }]
-        }
+        },
+        plugins: [
+            new CopyWebpackPlugin({
+                patterns: [
+                    {from: 'src/index.d.ts', to: 'tc-event.min.d.ts'},
+                    {from: 'src/type.d.ts'},
+                    {from: 'README.cn.md'},
+                    {from: 'README.md'},
+                    {from: 'LICENSE'}
+                ]
+            }),
+            new RunNodeWebpackPlugin({scriptToRun: './helper/sync-npm-version.js'})
+        ]
     };
 };

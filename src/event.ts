@@ -4,9 +4,10 @@
 import {findPos} from './util';
 import {createLocker} from './locker';
 import {TEventName, IEventListener, IEventItem, IToDo} from './type';
+import {triggerOnRegist, triggerOnEmit} from './interceptor';
 
 
-export class TCEvent {
+export class Event {
     name: TEventName;
     id: number;
     index: number;
@@ -44,7 +45,7 @@ export class TCEvent {
             index = ++ this.index;
         }
         const n = this.listeners.length;
-        const item = {
+        const item: IEventItem = {
             name: this.name,
             listener,
             once,
@@ -53,6 +54,7 @@ export class TCEvent {
             index,
             id: ++this.id
         };
+        triggerOnRegist(this.name, item);
         const insertIndex = (n === 0 || index > this._findLastIndex()) ? n : findPos(this.listeners, index, indexBefore);
         this._locker.add({
             index: insertIndex,
@@ -82,6 +84,7 @@ export class TCEvent {
                 if (item && (!item.once || !item.hasTrigger)) {
                     item.hasTrigger = true;
                     item.listener(data, firstEmit);
+                    triggerOnEmit(this.name, item);
                 }
             }
             return firstEmit;
