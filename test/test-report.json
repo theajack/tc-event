@@ -1,6 +1,6 @@
 {
     "passed": true,
-    "time": 2,
+    "time": 6,
     "results": [
         {
             "result": [
@@ -31,7 +31,7 @@
             ],
             "passed": true,
             "index": 0,
-            "time": 2,
+            "time": 6,
             "name": "测试event时序"
         },
         {
@@ -45,7 +45,7 @@
             ],
             "passed": true,
             "index": 1,
-            "time": 1,
+            "time": 0,
             "name": "测试all参数"
         },
         {
@@ -91,7 +91,7 @@
             ],
             "passed": true,
             "index": 3,
-            "time": 0,
+            "time": 1,
             "name": "测试index和indexBefore参数"
         }
     ]
