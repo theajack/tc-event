@@ -1,15 +1,13 @@
-const {registInterceptor, promise} = require('../lib');
-
 module.exports = [
     {
         name: '测试event时序', // 可选
         plugin: 'asyncPlugin',
-        async test (event) {
+        async test ({event, lib}) {
             event.clear();
             const eventName = 'test';
-            return await promise((resolve) => {
+            return await lib.promise((resolve) => {
                 const result = [];
-                registInterceptor({
+                lib.registInterceptor({
                     event,
                     eventName,
                     done () {
@@ -61,7 +59,7 @@ module.exports = [
     },
     {
         name: '测试all参数', // 可选
-        test (event) {
+        test ({event}) {
             event.clear();
             const eventName = 'test-all';
             const result = [];
@@ -84,7 +82,7 @@ module.exports = [
     },
     {
         name: '测试once参数',
-        test (event) {
+        test ({event}) {
             event.clear();
             const eventName = 'test-all';
             const result = [];
@@ -108,7 +106,7 @@ module.exports = [
     },
     {
         name: '测试index和indexBefore参数',
-        test (event) {
+        test ({event}) {
             event.clear();
             const eventName = 'test-index';
             

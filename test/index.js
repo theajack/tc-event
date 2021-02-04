@@ -1,12 +1,13 @@
 const event = require('../npm/tc-event.min');
 const {startTest} = require('easy-test-lib');
-const cases = require('./cases');
 const fs = require('fs');
 const path = require('path');
+const getAllCases = require('./get-cases');
+const lib = require('./lib');
 
 startTest({
-    args: event,
-    cases,
+    args: {event, lib},
+    cases: getAllCases(),
     onTestComplete (result) { // 测试全部完成回调 可选
         let txtContent = '';
         const log = (text = '') => {
@@ -35,3 +36,5 @@ startTest({
 
     }
 });
+
+
