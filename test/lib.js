@@ -14,12 +14,12 @@ function delay (time = 50) {
 function registInterceptor ({event, eventName, done}) {
     let total = 0;
     let index = 0;
-    event.onRegist((name) => {
+    event.onRegist(({name}) => {
         if (name === eventName) {
             total ++;
         }
     });
-    event.onEmit((name) => {
+    event.onEmit(({name}) => {
         if (name === eventName) {
             index ++;
             if (index === total) {

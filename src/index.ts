@@ -50,34 +50,35 @@ function regist (
 
 function registBase ({
     once = false, // 只触发一次
-    all = true, // 始终起作用
+    immediate = true, // 始终起作用
     name,
     listener,
+    order,
+    orderBefore,
     index,
-    indexBefore,
 }: IEventRegistOption & {name: TEventName}) {
     if (!checkEvent(name)) {
         init(name);
     }
-    return getEvent(name).regist({listener, once, all, index, indexBefore});
+    return getEvent(name).regist({listener, once, immediate, order, orderBefore, index});
 }
 
 // 移除事件回调
-function remove (name: TEventName, cond: number | IEventListener, imme?: boolean): boolean;
-function remove (eventItem: IEventItem, imme?: boolean): boolean;
+function remove (name: TEventName, cond: number | IEventListener, immediate?: boolean): boolean;
+function remove (eventItem: IEventItem, immediate?: boolean): boolean;
 
 function remove (
     name: TEventName | IEventItem,
     cond?: number | IEventListener | boolean,
-    imme?: boolean
+    immediate?: boolean
 ): boolean {
     if (typeof name === 'object') {
-        imme = cond as boolean;
+        immediate = cond as boolean;
         if (name === null) {
             console.error('参数错误', name);
             return false;
         }
-        return remove(name.name, name.id, imme);
+        return remove(name.name, name.id, immediate);
     }
     if (typeof name === 'object') {
         const item = name as IEventItem;
@@ -92,11 +93,11 @@ function remove (
         console.error('请传入要移除的listener 或 id');
         return false;
     } else {// 移除单个监听
-        return getEvent(name).remove(cond as number | IEventListener, imme);
+        return getEvent(name).remove(cond as number | IEventListener, immediate);
     }
 }
 // 移除单个事件或是所有
-function clear (name: TEventName | TEventName[]) {
+function clear (name?: TEventName | TEventName[]) {
     if (typeof name === 'string' || typeof name === 'number') {
         if (checkEvent(name)) {
             getEvent(name).clear();
@@ -112,7 +113,7 @@ function clear (name: TEventName | TEventName[]) {
 }
 
 // 触发事件
-function emit (name: TEventName, data: any) {
+function emit (name: TEventName, data?: any) {
     // 此处是为了 all 参数，当没有regist之前emit了，all的listener也能被触发
     if (!checkEvent(name)) {
         init(name);
@@ -120,9 +121,9 @@ function emit (name: TEventName, data: any) {
     return getEvent(name).emit(data);
 }
 
-function index (name: TEventName) {
+function order (name: TEventName) {
     if (checkEvent(name)) {
-        return getEvent(name).index;
+        return getEvent(name).order;
     } else {
         // console.warn('错误的事件：' + name);
         return -1;
@@ -140,5 +141,5 @@ export default {
     checkEvent, // 检查是否存在事件
     remove,
     clear,
-    index,
+    order,
 };

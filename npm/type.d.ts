@@ -6,10 +6,11 @@ export interface IEventListener {
 
 export interface IEventRegistOption {
     listener: IEventListener;
-    all?: boolean;
+    immediate?: boolean;
     once?: boolean;
+    order?: number;
+    orderBefore?: boolean;
     index?: number;
-    indexBefore?: boolean;
 }
 
 export interface IJson<T> {
@@ -23,15 +24,19 @@ export interface IRegistObject {
 export interface IEventItem {
     name: TEventName;
     listener: IEventListener;
-    all: boolean;
+    immediate: boolean;
     once: boolean;
-    index: number;
+    order: number;
     hasTrigger: boolean;
     id: number;
 }
 
-export interface IToDo {index: number, func:()=>any}
+export interface ILockerFn {index: number, func:()=>any}
 
-export interface IOnInterceptor {
-    (name?: TEventName, item?: IEventItem): void
+export interface IOnInterceptorRegist {
+    (data: {name?: TEventName, item?: IEventItem}): void
+}
+
+export interface IOnInterceptorEmit {
+    (data: {name?: TEventName, item?: IEventItem, data?: any, firstEmit?: boolean}): void
 }

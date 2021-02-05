@@ -3,18 +3,18 @@
 
 import {findPos} from './util';
 import {createLocker} from './locker';
-import {TEventName, IEventListener, IEventItem, IToDo} from './type';
+import {TEventName, IEventListener, IEventItem, ILockerFn} from './type';
 import {triggerOnRegist, triggerOnEmit} from './interceptor';
 
 
 export class Event {
     name: TEventName;
     id: number;
-    index: number;
     hasTrigger: boolean;
     private listeners: Array<IEventItem | undefined>;
+    order: number;
     private _triggerData: any;
-    private _locker: {add ({index, func}: IToDo): void; lock (fn: () => any): any;};
+    private _locker: {add ({index, func}: ILockerFn): void; lock (fn: () => any): any;};
     constructor (name: TEventName) {
         // 对于ready之类的事件 增加一个如果已经触发了就马上执行的逻辑
         this.name = name;
@@ -23,9 +23,9 @@ export class Event {
     _init () {
         this._locker = createLocker();
         this._triggerData = undefined;
+        this.order = 0;
         this.hasTrigger = false;
         this.id = 0;
-        this.index = 0;
         this.listeners = [];
     }
     _getListenerNumber () {
@@ -34,42 +34,53 @@ export class Event {
     reset () {
         this.listeners = [];
     }
-    regist ({listener, once = false, all = true, index, indexBefore = false}: {
+    regist ({listener, once = false, immediate = true, order, orderBefore = false, index}: {
         listener: IEventListener;
         once?: boolean;
-        all?: boolean;
+        immediate?: boolean;
+        order?: number;
+        orderBefore?: boolean;
         index?: number;
-        indexBefore?: boolean;
     }) {
-        if (typeof index !== 'number') {
-            index = ++ this.index;
-        }
+        let insertIndex: number;
         const n = this.listeners.length;
+        if (typeof index === 'number') {
+            if (index > n) {index = n;}
+            else if (index < 0) {index = 0;}
+            const item = this.listeners[index];
+            order = item ? item.order : ++ this.order;
+            insertIndex = index;
+        } else {
+            if (typeof order !== 'number') {
+                order = ++ this.order;
+            }
+            insertIndex = (n === 0 || order > this._findLastOrder()) ? n : findPos(this.listeners, order, orderBefore);
+        }
         const item: IEventItem = {
             name: this.name,
             listener,
             once,
-            all,
+            immediate,
             hasTrigger: false,
-            index,
+            order,
             id: ++this.id
         };
-        triggerOnRegist(this.name, item);
-        const insertIndex = (n === 0 || index > this._findLastIndex()) ? n : findPos(this.listeners, index, indexBefore);
+        
+        triggerOnRegist({name: this.name, item});
         this._locker.add({
             index: insertIndex,
             func: () => {this.listeners.splice(insertIndex, 0, item);}
         });
-        if (all && this.hasTrigger) {
+        if (immediate && this.hasTrigger) {
             if (once) {item.hasTrigger = true;}
             listener(this._triggerData, false);
         }
         return item;
     }
-    _findLastIndex () {
+    _findLastOrder () {
         for (let i = this.listeners.length - 1; i >= 0; i--) {
             if (this.listeners[i]) {
-                return (this.listeners[i] as IEventItem).index;
+                return (this.listeners[i] as IEventItem).order;
             }
         }
         return 0;
@@ -84,13 +95,13 @@ export class Event {
                 if (item && (!item.once || !item.hasTrigger)) {
                     item.hasTrigger = true;
                     item.listener(data, firstEmit);
-                    triggerOnEmit(this.name, item);
+                    triggerOnEmit({name: this.name, item, data, firstEmit});
                 }
             }
             return firstEmit;
         });
     }
-    remove (cond: number | IEventListener, imme: boolean = false) {
+    remove (cond: number | IEventListener, immediate: boolean = false) {
         let attr: 'id' | 'listener';
         const type = typeof cond;
         if (type === 'number') {
@@ -105,11 +116,11 @@ export class Event {
             return item && item[attr] === cond;
         });
         if (!result) {
-            console.warn('removeEvent:未找到监听函数 ' + this.name);
+            // console.warn('removeEvent:未找到监听函数 ' + this.name);
             return false;
         }
         const index = this.listeners.indexOf(result);
-        if (imme) {this.listeners[index] = undefined;}
+        if (immediate) {this.listeners[index] = undefined;}
         this._locker.add({
             index,
             func: () => {this.listeners.splice(index, 1);}

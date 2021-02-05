@@ -3,44 +3,40 @@
     "time": 5,
     "results": [
         {
-            "result": 1,
-            "expect": 1,
+            "result": [
+                false,
+                true,
+                true,
+                false,
+                true,
+                false
+            ],
+            "expect": [
+                false,
+                true,
+                true,
+                false,
+                true,
+                false
+            ],
             "passed": true,
             "index": 0,
-            "time": 0,
-            "name": "xxx"
+            "time": 1,
+            "name": "测试checkEvent参数"
         },
         {
             "result": [
-                "ibb0",
-                "ib0",
-                "i0",
-                "1",
-                "2b",
-                "2",
-                "2a",
-                "3",
-                "4",
-                "5",
-                "1000"
+                1,
+                2
             ],
             "expect": [
-                "ibb0",
-                "ib0",
-                "i0",
-                "1",
-                "2b",
-                "2",
-                "2a",
-                "3",
-                "4",
-                "5",
-                "1000"
+                1,
+                2
             ],
             "passed": true,
             "index": 1,
-            "time": 4,
-            "name": "测试event时序"
+            "time": 1,
+            "name": "测试clear参数"
         },
         {
             "result": [
@@ -54,7 +50,87 @@
             "passed": true,
             "index": 2,
             "time": 0,
-            "name": "测试all参数"
+            "name": "测试immediate参数"
+        },
+        {
+            "result": [
+                9,
+                5,
+                7,
+                1,
+                6,
+                2,
+                3,
+                4,
+                8
+            ],
+            "expect": [
+                9,
+                5,
+                7,
+                1,
+                6,
+                2,
+                3,
+                4,
+                8
+            ],
+            "passed": true,
+            "index": 3,
+            "time": 0,
+            "name": "测试order和orderBefore参数"
+        },
+        {
+            "result": [
+                "onRegist: test-interceptor1",
+                "onRegist: test-interceptor2",
+                "onEmit: test-interceptor1 test-interceptor1 data true",
+                "onEmit: test-interceptor2 test-interceptor2 data true",
+                "onEmit: test-interceptor2 test-interceptor2 data2 false"
+            ],
+            "expect": [
+                "onRegist: test-interceptor1",
+                "onRegist: test-interceptor2",
+                "onEmit: test-interceptor1 test-interceptor1 data true",
+                "onEmit: test-interceptor2 test-interceptor2 data true",
+                "onEmit: test-interceptor2 test-interceptor2 data2 false"
+            ],
+            "passed": true,
+            "index": 4,
+            "time": 1,
+            "name": "测试interceptor参数"
+        },
+        {
+            "result": [
+                "ibb0",
+                "ib0",
+                "i0",
+                "1",
+                "2b",
+                "2",
+                "2a",
+                "3",
+                "4",
+                "5",
+                "1000"
+            ],
+            "expect": [
+                "ibb0",
+                "ib0",
+                "i0",
+                "1",
+                "2b",
+                "2",
+                "2a",
+                "3",
+                "4",
+                "5",
+                "1000"
+            ],
+            "passed": true,
+            "index": 5,
+            "time": 2,
+            "name": "测试event时序"
         },
         {
             "result": [
@@ -72,12 +148,42 @@
                 3
             ],
             "passed": true,
-            "index": 3,
+            "index": 6,
             "time": 0,
             "name": "测试once参数"
         },
         {
             "result": [
+                [
+                    1,
+                    4,
+                    2,
+                    3,
+                    5
+                ],
+                4,
+                3,
+                1
+            ],
+            "expect": [
+                [
+                    1,
+                    4,
+                    2,
+                    3,
+                    5
+                ],
+                4,
+                3,
+                1
+            ],
+            "passed": true,
+            "index": 7,
+            "time": 1,
+            "name": "测试order函数"
+        },
+        {
+            "result": [
                 3,
                 6,
                 1,
@@ -98,9 +204,39 @@
                 7
             ],
             "passed": true,
-            "index": 4,
-            "time": 1,
-            "name": "测试index和indexBefore参数"
+            "index": 8,
+            "time": 0,
+            "name": "测试index参数"
+        },
+        {
+            "result": [
+                1,
+                2,
+                3,
+                7,
+                5,
+                1,
+                2,
+                3,
+                7,
+                7
+            ],
+            "expect": [
+                1,
+                2,
+                3,
+                7,
+                5,
+                1,
+                2,
+                3,
+                7,
+                7
+            ],
+            "passed": true,
+            "index": 9,
+            "time": 0,
+            "name": "测试once参数"
         }
     ]
 }

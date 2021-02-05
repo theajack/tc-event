@@ -14,6 +14,7 @@ startTest({
             console.log(text);
             txtContent += text + '\n';
         };
+        log();
         log(`测试结果: ${result.passed ? '' : '不'}通过`);
         
         log(`测试用例数: ${result.results.length}`);
@@ -29,6 +30,12 @@ startTest({
             }
             log();
         });
+
+        
+        console.log(`测试结果: ${result.passed ? '' : '不'}通过`);
+        console.log(`测试用例数: ${result.results.length}`);
+        console.log(`总耗时: ${result.time}ms`);
+        log();
         
         
         fs.writeFileSync(path.resolve('./', 'test/test-report.json'), JSON.stringify(result, null, 4), 'utf8');

@@ -1,23 +1,23 @@
-import {IOnInterceptor} from './type';
+import {IOnInterceptorRegist, IOnInterceptorEmit} from './type';
 
 
-let _onRegist: IOnInterceptor | undefined;
+let _onRegist: IOnInterceptorRegist | undefined;
 
-export function onRegist (fn: IOnInterceptor) {
+export function onRegist (fn: IOnInterceptorRegist) {
     _onRegist = fn;
 }
 
-export const triggerOnRegist: IOnInterceptor = (name, data) => {
-    if (_onRegist)_onRegist(name, data);
+export const triggerOnRegist: IOnInterceptorRegist = ({name, item}) => {
+    if (_onRegist)_onRegist({name, item});
 };
 
-let _onEmit: IOnInterceptor | undefined;
+let _onEmit: IOnInterceptorEmit | undefined;
 
-export function onEmit (fn: IOnInterceptor) {
+export function onEmit (fn: IOnInterceptorEmit) {
     _onEmit = fn;
 }
-export const triggerOnEmit: IOnInterceptor = (name, item) => {
-    if (_onEmit)_onEmit(name, item);
+export const triggerOnEmit: IOnInterceptorEmit = ({name, item, data, firstEmit}) => {
+    if (_onEmit)_onEmit({name, item, data, firstEmit});
 };
 
 export function clearInterceptor () {

@@ -1,20 +1,20 @@
 
-import {IToDo} from './type';
+import {ILockerFn} from './type';
 
 export function createLocker () {
-    let list: Array<IToDo> = [];
+    let list: Array<ILockerFn> = [];
     let locked = false;
     function exec () {
         if (list.length === 0) {return;}
         // 根据index倒序
         list.sort((a, b) => b.index - a.index);
-        for (let i = list.length - 1; i >= 0; i--) {
+        for (let i = 0; i < list.length; i++) {
             list[i].func();
         }
         list = [];
     }
     return {
-        add ({index, func}: IToDo) {
+        add ({index, func}: ILockerFn) {
             locked ? list.push({index, func}) : func();
         },
         lock (fn: ()=>any) {

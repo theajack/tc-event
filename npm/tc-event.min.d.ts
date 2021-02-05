@@ -2,25 +2,24 @@ import {
     IJson, TEventName, IRegistObject,
     IEventListener, IEventRegistOption,
     IEventItem,
-    IOnInterceptor,
+    IOnInterceptorRegist,
+    IOnInterceptorEmit
 } from './type';
 
 interface IEventStatic {
     version: string;
     EVENT: IJson<string>; // 事件枚举
     emit(name: TEventName, data: any): boolean; // 触发事件
-    onEmit(fn: IOnInterceptor): void;
+    onEmit(fn: IOnInterceptorEmit): void;
     regist(name: TEventName, listener: IEventListener | IEventRegistOption): IEventItem;
     regist(name: IRegistObject, listener: IEventListener | IEventRegistOption): IEventItem;
     regist(name: IJson<IEventRegistOption>): IJson<IEventItem>;
-    onRegist(fn: IOnInterceptor): void;
+    onRegist(fn: IOnInterceptorRegist): void;
     checkEvent(name: TEventName): boolean; // 检查是否存在事件
     remove(name: TEventName, cond: number | IEventListener, imme?: boolean): boolean;
     remove(eventItem: IEventItem, imme?: boolean): boolean;
-
-    clear(name: TEventName | TEventName[]): void;
-    index(name: TEventName): number;
-    
+    clear(name?: TEventName | TEventName[]): void;
+    order(name: TEventName): number;
 }
 
 export {
