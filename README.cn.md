@@ -44,7 +44,7 @@ event.regist('myEvent', (data) => {
     console.log('emited!', data);
 })
 
-event.emit('Aha!');
+event.emit('myEvent', 'Aha!');
 ```
 
 #### 2.2 cdn
@@ -57,7 +57,7 @@ event.emit('Aha!');
         console.log('emited!', data);
     })
 
-    TEvent.emit('Aha!');
+    TEvent.emit('myEvent', 'Aha!');
 </script>
 ```
 

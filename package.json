@@ -1,7 +1,7 @@
 {
     "name": "tc-event",
-    "version": "0.0.1",
-    "description": "idcard",
+    "version": "0.0.2",
+    "description": "tc-event",
     "scripts": {
         "dev": "webpack-dev-server --open --config webpack-config/dev.js",
         "build": "webpack --config webpack-config/build.js",

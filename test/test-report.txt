@@ -8,25 +8,25 @@
 【测试checkEvent参数】: 通过 / 1ms
 输出结果: [false,true,true,false,true,false]
 
-【测试clear参数】: 通过 / 1ms
+【测试clear参数】: 通过 / 0ms
 输出结果: [1,2]
 
 【测试immediate参数】: 通过 / 0ms
 输出结果: [1,2]
 
-【测试order和orderBefore参数】: 通过 / 0ms
+【测试order和orderBefore参数】: 通过 / 1ms
 输出结果: [9,5,7,1,6,2,3,4,8]
 
-【测试interceptor参数】: 通过 / 1ms
+【测试interceptor参数】: 通过 / 0ms
 输出结果: ["onRegist: test-interceptor1","onRegist: test-interceptor2","onEmit: test-interceptor1 test-interceptor1 data true","onEmit: test-interceptor2 test-interceptor2 data true","onEmit: test-interceptor2 test-interceptor2 data2 false"]
 
 【测试event时序】: 通过 / 2ms
 输出结果: ["ibb0","ib0","i0","1","2b","2","2a","3","4","5","1000"]
 
-【测试once参数】: 通过 / 0ms
+【测试once参数】: 通过 / 1ms
 输出结果: [1,2,3,1,3]
 
-【测试order函数】: 通过 / 1ms
+【测试order函数】: 通过 / 0ms
 输出结果: [[1,4,2,3,5],4,3,1]
 
 【测试index参数】: 通过 / 0ms

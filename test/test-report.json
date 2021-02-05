@@ -35,7 +35,7 @@
             ],
             "passed": true,
             "index": 1,
-            "time": 1,
+            "time": 0,
             "name": "测试clear参数"
         },
         {
@@ -77,7 +77,7 @@
             ],
             "passed": true,
             "index": 3,
-            "time": 0,
+            "time": 1,
             "name": "测试order和orderBefore参数"
         },
         {
@@ -97,7 +97,7 @@
             ],
             "passed": true,
             "index": 4,
-            "time": 1,
+            "time": 0,
             "name": "测试interceptor参数"
         },
         {
@@ -149,7 +149,7 @@
             ],
             "passed": true,
             "index": 6,
-            "time": 0,
+            "time": 1,
             "name": "测试once参数"
         },
         {
@@ -179,7 +179,7 @@
             ],
             "passed": true,
             "index": 7,
-            "time": 1,
+            "time": 0,
             "name": "测试order函数"
         },
         {
