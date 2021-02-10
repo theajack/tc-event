@@ -358,6 +358,40 @@ console.log(result);
 // [1, 2, 3, 7, 5, 1, 2, 3, 7, 7]
 ```
 
+#### 4.10 registNotImmediate
+
+```js
+event.registNotImmediate('xxx', ()=>{})
+// equals
+event.regist('xxx', {
+    immediate: false,
+    listener: ()=>{}
+})
+```
+
+#### 4.11 registOnce
+
+```js
+event.registOnce('xxx', ()=>{})
+// equals
+event.regist('xxx', {
+    once: true,
+    listener: ()=>{}
+})
+```
+
+#### 4.12 registNotImmediateOnce
+
+```js
+event.registNotImmediateOnce('xxx', ()=>{})
+// equals
+event.regist('xxx', {
+    immediate: false,
+    once: true,
+    listener: ()=>{}
+})
+```
+
 ### 5 ts interface
 
  1. IEventRegistOption

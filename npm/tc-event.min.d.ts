@@ -20,6 +20,9 @@ interface IEventStatic {
     remove(eventItem: IEventItem, imme?: boolean): boolean;
     clear(name?: TEventName | TEventName[]): void;
     order(name: TEventName): number;
+    registNotImmediate(name: TEventName, listener: IEventListener): IEventItem;
+    registNotImmediateOnce(name: TEventName, listener: IEventListener): IEventItem;
+    registOnce(name: TEventName, listener: IEventListener): IEventItem;
 }
 
 export {

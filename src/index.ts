@@ -47,6 +47,26 @@ function regist (
     }
 }
 
+function registNotImmediate (name: TEventName, listener: IEventListener) {
+    return regist(name, {
+        immediate: false,
+        listener
+    });
+}
+
+function registOnce (name: TEventName, listener: IEventListener) {
+    return regist(name, {
+        once: true,
+        listener
+    });
+}
+function registNotImmediateOnce (name: TEventName, listener: IEventListener) {
+    return regist(name, {
+        immediate: false,
+        once: true,
+        listener
+    });
+}
 
 function registBase ({
     once = false, // 只触发一次
@@ -142,4 +162,7 @@ export default {
     remove,
     clear,
     order,
+    registNotImmediate,
+    registNotImmediateOnce,
+    registOnce
 };
