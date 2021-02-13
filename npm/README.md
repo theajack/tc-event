@@ -67,7 +67,7 @@ event.emit('myEvent', 'Aha!');
 interface IEventStatic {
     version: string;
     EVENT: IJson<string>; // event enumeration
-    emit(name: TEventName, data: any): boolean; // trigger event
+    emit(name: TEventName, data?: any): boolean; // trigger event
     onEmit(fn: IOnInterceptorEmit): void;
     regist(name: TEventName, listener: IEventListener | IEventRegistOption): IEventItem;
     regist(name: IRegistObject, listener: IEventListener | IEventRegistOption): IEventItem;

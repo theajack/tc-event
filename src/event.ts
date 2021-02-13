@@ -85,7 +85,7 @@ export class Event {
         }
         return 0;
     }
-    emit (data: any) {
+    emit (data?: any) {
         return this._locker.lock(() => {
             const firstEmit = this.hasTrigger === false;
             if (!this.hasTrigger) {this.hasTrigger = true;}

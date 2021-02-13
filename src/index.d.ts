@@ -9,7 +9,7 @@ import {
 interface IEventStatic {
     version: string;
     EVENT: IJson<string>; // 事件枚举
-    emit(name: TEventName, data: any): boolean; // 触发事件
+    emit(name: TEventName, data?: any): boolean; // 触发事件
     onEmit(fn: IOnInterceptorEmit): void;
     regist(name: TEventName, listener: IEventListener | IEventRegistOption): IEventItem;
     regist(name: IRegistObject, listener: IEventListener | IEventRegistOption): IEventItem;
