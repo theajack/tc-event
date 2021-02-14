@@ -1,9 +1,10 @@
 
 import {isObject, isUndf} from './util';
-import {TEventName, IEventListener, IEventRegistOption, IEventItem, IRegistObject, IJson} from './type';
+import {TEventName, IEventListener, IEventRegistOption, IEventItem, IRegistObject, IJson, ILink} from './type';
 import {clearEvent, delEvent, getEVENT, getEvent, setEvent} from './event-pool';
 import version from './version';
 import {onRegist, onEmit} from './interceptor';
+import {createEventLink} from './link-use';
 
 function checkEvent (name: TEventName) {
     if (getEvent(name)) {
@@ -24,11 +25,14 @@ function init (name: TEventName) {
 function regist(name: TEventName, listener: IEventListener | IEventRegistOption): IEventItem;
 function regist(name: IRegistObject, listener: IEventListener | IEventRegistOption): IEventItem;
 function regist(name: IJson<IEventRegistOption>): IJson<IEventItem>;
+// 链式调用
+function regist(name: TEventName): ILink;
+
 
 function regist (
     name: TEventName | IRegistObject | IJson<IEventRegistOption>,
     listener?: IEventListener | IEventRegistOption
-): IEventItem | null | IJson<IEventItem> {
+): IEventItem | null | IJson<IEventItem> | ILink {
     // json 格式传入可以注册个事件
     if (isObject(name)) {
         const result: IJson<IEventItem> = {};
@@ -41,10 +45,13 @@ function regist (
         return registBase({name: name as TEventName, listener});
     } else if (typeof listener === 'object') {
         return registBase({name: name as TEventName, ...listener});
-    } else {
-        console.warn('错误的listener', name, listener);
-        return null;
+    } else if (typeof listener === 'undefined') {
+        if (typeof name === 'string' || typeof name === 'number') {
+            return createEventLink(name);
+        }
     }
+    console.warn('错误的listener', name, listener);
+    return null;
 }
 
 function registNotImmediate (name: TEventName, listener: IEventListener) {
@@ -67,8 +74,14 @@ function registNotImmediateOnce (name: TEventName, listener: IEventListener) {
         listener
     });
 }
+function registSingle (name: TEventName, listener: IEventListener) {
+    return regist(name, {
+        single: true,
+        listener,
+    });
+}
 
-function registBase ({
+export function registBase ({
     once = false, // 只触发一次
     immediate = true, // 始终起作用
     name,
@@ -76,11 +89,14 @@ function registBase ({
     order,
     orderBefore,
     index,
+    single,
 }: IEventRegistOption & {name: TEventName}) {
     if (!checkEvent(name)) {
         init(name);
     }
-    return getEvent(name).regist({listener, once, immediate, order, orderBefore, index});
+    return getEvent(name).regist({
+        listener, once, immediate, order, orderBefore, index, single
+    });
 }
 
 // 移除事件回调
@@ -164,5 +180,6 @@ export default {
     order,
     registNotImmediate,
     registNotImmediateOnce,
-    registOnce
+    registOnce,
+    registSingle,
 };

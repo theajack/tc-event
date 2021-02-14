@@ -15,7 +15,8 @@ module.exports = {
         contentBase: path.resolve('./', 'public'),
         historyApiFallback: true,
         inline: true,
-        host: 'localhost',
+        // host: 'localhost',
+        host: '0.0.0.0',
         disableHostCheck: true,
         proxy: {
         },

@@ -1,7 +1,25 @@
 {
     "passed": true,
-    "time": 5,
+    "time": 4,
     "results": [
+        {
+            "result": [
+                1,
+                2,
+                3,
+                5
+            ],
+            "expect": [
+                1,
+                2,
+                3,
+                5
+            ],
+            "passed": true,
+            "index": 0,
+            "time": 1,
+            "name": "测试别名函数"
+        },
         {
             "result": [
                 false,
@@ -20,7 +38,7 @@
                 false
             ],
             "passed": true,
-            "index": 0,
+            "index": 1,
             "time": 1,
             "name": "测试checkEvent参数"
         },
@@ -34,7 +52,7 @@
                 2
             ],
             "passed": true,
-            "index": 1,
+            "index": 2,
             "time": 0,
             "name": "测试clear参数"
         },
@@ -48,7 +66,7 @@
                 2
             ],
             "passed": true,
-            "index": 2,
+            "index": 3,
             "time": 0,
             "name": "测试immediate参数"
         },
@@ -76,8 +94,8 @@
                 8
             ],
             "passed": true,
-            "index": 3,
-            "time": 1,
+            "index": 4,
+            "time": 0,
             "name": "测试order和orderBefore参数"
         },
         {
@@ -96,9 +114,29 @@
                 "onEmit: test-interceptor2 test-interceptor2 data2 false"
             ],
             "passed": true,
-            "index": 4,
+            "index": 5,
             "time": 0,
             "name": "测试interceptor参数"
+        },
+        {
+            "result": [
+                1,
+                2,
+                3,
+                4,
+                6
+            ],
+            "expect": [
+                1,
+                2,
+                3,
+                4,
+                6
+            ],
+            "passed": true,
+            "index": 6,
+            "time": 0,
+            "name": "测试链式调用"
         },
         {
             "result": [
@@ -128,7 +166,7 @@
                 "1000"
             ],
             "passed": true,
-            "index": 5,
+            "index": 7,
             "time": 2,
             "name": "测试event时序"
         },
@@ -148,8 +186,8 @@
                 3
             ],
             "passed": true,
-            "index": 6,
-            "time": 1,
+            "index": 8,
+            "time": 0,
             "name": "测试once参数"
         },
         {
@@ -178,8 +216,8 @@
                 1
             ],
             "passed": true,
-            "index": 7,
-            "time": 0,
+            "index": 9,
+            "time": 1,
             "name": "测试order函数"
         },
         {
@@ -204,9 +242,33 @@
                 7
             ],
             "passed": true,
-            "index": 8,
+            "index": 10,
             "time": 0,
             "name": "测试index参数"
+        },
+        {
+            "result": [
+                1,
+                true,
+                1,
+                false,
+                1,
+                false,
+                1
+            ],
+            "expect": [
+                1,
+                true,
+                1,
+                false,
+                1,
+                false,
+                1
+            ],
+            "passed": true,
+            "index": 11,
+            "time": 0,
+            "name": "测试registOption"
         },
         {
             "result": [
@@ -234,9 +296,27 @@
                 7
             ],
             "passed": true,
-            "index": 9,
+            "index": 12,
             "time": 0,
             "name": "测试once参数"
+        },
+        {
+            "result": [
+                1,
+                2,
+                4,
+                5
+            ],
+            "expect": [
+                1,
+                2,
+                4,
+                5
+            ],
+            "passed": true,
+            "index": 13,
+            "time": 0,
+            "name": "测试single参数"
         }
     ]
 }

@@ -212,7 +212,7 @@ event.onRegist(({name, item}) => {
     result.push(`onRegist: ${name}`);
 });
 event.onEmit(({name, item, data, firstEmit}) => {
-    result.push(`onEmit: ${name} ${data} ${firstEmit}`, );
+    result.push(`onEmit: ${name} ${data} ${firstEmit}`);
 });
 event.regist(eventName1, () => {});
 event.regist(eventName2, () => {});
@@ -298,7 +298,53 @@ event.emit(eventName);
 console.log(result);
 ```
 
-#### 4.8 order 函数
+#### 4.8 single 参数
+
+单例监听模式，对某个事件名启用 single 参数会覆盖之前该事件的所有监听函数
+
+且之后该事件无需再带上 single 参数
+
+启用single参数时， index order orderBefore 参数无效
+
+```js
+const eventName = 'test-single';
+const result = [];
+
+event.regist(eventName, () => {
+    result.push(1);
+});
+event.emit(eventName);
+// 测试覆盖旧方法
+event.regist(eventName, {
+    single: true,
+    immediate: false,
+    listener: () => {
+        result.push(2);
+    }
+});
+event.emit(eventName);
+event.clear(eventName);
+
+event.regist(eventName, {
+    single: true,
+    listener () { result.push(3);}
+});
+event.regist(eventName, {
+    single: true,
+    listener () { result.push(4);}
+});
+event.emit(eventName);
+// 测试single参数缓存
+event.regist(eventName, {
+    immediate: false,
+    listener () { result.push(5);}
+});
+event.emit(eventName);
+console.log(result);
+// [1, 2, 4, 5]
+```
+
+#### 4.9 order 函数
 
 获取某个监听的序号
 
@@ -327,7 +373,7 @@ console.log([result, event.order(eventName), e1.order, e2.order]);
 // [[1, 4, 2, 3, 5], 4, 3, 1
 ```
 
-#### 4.9 remove 函数
+#### 4.10 remove 函数
 
 移除事件监听
 
@@ -360,7 +406,7 @@ console.log(result);
 // [1, 2, 3, 7, 5, 1, 2, 3, 7, 7]
 ```
 
-#### 4.10 registNotImmediate
+#### 4.11 registNotImmediate
 
 ```js
 event.registNotImmediate('xxx', ()=>{})
@@ -371,7 +417,7 @@ event.regist('xxx', {
 })
 ```
 
-#### 4.11 registOnce
+#### 4.12 registOnce
 
 ```js
 event.registOnce('xxx', ()=>{})
@@ -382,7 +428,7 @@ event.regist('xxx', {
 })
 ```
 
-#### 4.12 registNotImmediateOnce
+#### 4.13 registNotImmediateOnce
 
 ```js
 event.registNotImmediateOnce('xxx', ()=>{})
@@ -392,6 +438,65 @@ event.regist('xxx', {
     once: true,
     listener: ()=>{}
 })
+```
+
+#### 4.14 registSingle
+
+```js
+event.registSingle('xxx', ()=>{})
+// 等价于
+event.regist('xxx', {
+    single: true,
+    listener: ()=>{}
+})
+```
+
+#### 4.15 监听回调参数
+
+监听函数第二个参数是一个json，包含有三个属性
+
+1. firstEmit 表示该监听是否是首次触发
+2. remove 是移除当前监听的方法
+3. clear 是移除当前事件的方法
+
+```js
+event.regist('xxx', (data, {firstEmit, remove, clear})=>{
+
+})
+```
+
+#### 4.16 链式调用
+
+regist函数当指传入事件名时会启用链式调用
+
+所有参数都可通过链式调用，所有api都是可选的，最后需要通过 listen 方法触发监听
+
+
+```js
+event.regist('xxx')
+    .index(1)
+    .order(1)
+    .orderBefore()
+    .notImmediate()
+    .single()
+    .once()
+    .listener()
+    .listen();
+```
+
+声明文件如下
+
+```ts
+interface ILink {
+    single: (single: boolean) => ILink;
+    notImmediate: (immediate: boolean) => ILink;
+    once: (once: boolean) => ILink;
+    index: (index: number) => ILink;
+    order: (order: number) => ILink;
+    orderBefore: (orderBefore: boolean) => ILink;
+    listener: (listener: IEventListener) => ILink;
+    listen: (listener?: IEventListener) => IEventItem;
+}
 ```
 
 ### 5 ts 接口
@@ -409,12 +514,17 @@ export interface IEventRegistOption {
     order?: number;
     orderBefore?: boolean;
     index?: number;
+    single?: boolean;
 }
 export interface IRegistObject {
     [key: string]: IEventRegistOption;
 }
 export interface IEventListener {
-    (data: any, firstEmit: boolean): void;
+    (data: any, listenOption: {
+        firstEmit: boolean;
+        remove: () => boolean;
+        clear: () => boolean;
+    }): void;
 }
 export interface IEventItem {
     name: TEventName;
@@ -424,5 +534,6 @@ export interface IEventItem {
     order: number;
     hasTrigger: boolean;
     id: number;
+    single: boolean;
 }
 ```

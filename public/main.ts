@@ -39,22 +39,26 @@ function registEvent () {
 }
 
 function t2 () {
-    const eventName = 'test-clear';
-    const result: number[] = [];
-    event.regist(eventName, () => {
+    const eventName = 'test-regist-option';
+        
+    const result: (number|boolean)[] = [];
+    event.regist(eventName, (method, {clear}) => {
         result.push(1);
+        if (method === 'clear') {
+            clear();
+        }
     });
-    event.emit(eventName);
-    event.clear(eventName);
-    event.emit(eventName);
-    event.regist(eventName, {
-        immediate: false,
-        listener: () => {
-            result.push(2);
+    event.regist(eventName, (method, {firstEmit, remove}) => {
+        result.push(firstEmit);
+        if (method === 'remove') {
+            remove();
         }
     });
     event.emit(eventName);
-    event.clear();
+    event.emit(eventName);
+    event.emit(eventName, 'remove');
+    event.emit(eventName, 'clear');
+    event.emit(eventName);
     event.emit(eventName);
     console.log(result);
 }

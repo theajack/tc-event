@@ -7,8 +7,8 @@ export function onRegist (fn: IOnInterceptorRegist) {
     _onRegist = fn;
 }
 
-export const triggerOnRegist: IOnInterceptorRegist = ({name, item}) => {
-    if (_onRegist)_onRegist({name, item});
+export const triggerOnRegist: IOnInterceptorRegist = (option) => {
+    if (_onRegist)_onRegist(option);
 };
 
 let _onEmit: IOnInterceptorEmit | undefined;
@@ -16,8 +16,8 @@ let _onEmit: IOnInterceptorEmit | undefined;
 export function onEmit (fn: IOnInterceptorEmit) {
     _onEmit = fn;
 }
-export const triggerOnEmit: IOnInterceptorEmit = ({name, item, data, firstEmit}) => {
-    if (_onEmit)_onEmit({name, item, data, firstEmit});
+export const triggerOnEmit: IOnInterceptorEmit = (option) => {
+    if (_onEmit)_onEmit(option);
 };
 
 export function clearInterceptor () {
