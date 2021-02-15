@@ -72,12 +72,17 @@ interface IEventStatic {
     regist(name: TEventName, listener: IEventListener | IEventRegistOption): IEventItem;
     regist(name: IRegistObject, listener: IEventListener | IEventRegistOption): IEventItem;
     regist(name: IJson<IEventRegistOption>): IJson<IEventItem>;
+    regist(name: TEventName): ILink;
     onRegist(fn: IOnInterceptorRegist): void;
     checkEvent(name: TEventName): boolean; // Check if there is an event
     remove(name: TEventName, cond: number | IEventListener, imme?: boolean): boolean;
     remove(eventItem: IEventItem, imme?: boolean): boolean;
     clear(name?: TEventName | TEventName[]): void;
     order(name: TEventName): number;
+    registNotImmediate(name: TEventName, listener: IEventListener): IEventItem;
+    registNotImmediateOnce(name: TEventName, listener: IEventListener): IEventItem;
+    registOnce(name: TEventName, listener: IEventListener): IEventItem;
+    registSingle(name: TEventName, listener: IEventListener): IEventItem;
 }
 ```
 
