@@ -79,5 +79,6 @@ export interface ILink {
     name: (name: string) => ILink;
     head: () => ILink;
     tail: ()=> ILink;
+    times: (times: number)=> ILink;
     listen: (listener?: IEventListener) => IEventItem;
 }

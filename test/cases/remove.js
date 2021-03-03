@@ -1,5 +1,5 @@
 module.exports = {
-    name: '测试once参数',
+    name: '测试remove参数',
     test ({event}) {
         event.clear();
         const eventName = 'test-remove';
@@ -8,6 +8,7 @@ module.exports = {
         const l5 = () => { result.push(5); };
         const l6 = () => { result.push(6); };
         const l7 = () => { result.push(7); };
+
         event.regist(eventName, () => {
             result.push(1);
         });
@@ -18,7 +19,10 @@ module.exports = {
             result.push(3);
             event.remove(eventName, l4, true);
             event.remove(eventName, l5);
-            event.regist(eventName, l7);
+            event.regist(eventName, {
+                listener: l7,
+                name: 'xxx'
+            });
         });
         event.regist(eventName, l4);
         event.regist(eventName, l5);

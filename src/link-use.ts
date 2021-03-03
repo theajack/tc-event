@@ -49,6 +49,10 @@ export function createEventLink (eventName: TEventName): ILink {
             options.listener = listener;
             return this;
         },
+        times (times: number) {
+            options.times = times;
+            return this;
+        },
         listen (listener?: IEventListener) {
             if (listener) {
                 options.listener = listener;

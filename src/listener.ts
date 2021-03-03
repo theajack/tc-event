@@ -1,5 +1,6 @@
 import {Event} from './event';
 import {getEvent} from './event-pool';
+import {triggerOnEmit} from './interceptor';
 import {IEventItem, IEventRegistOption} from './type';
 
 export function createListener (event: Event, {
@@ -14,6 +15,7 @@ export function createListener (event: Event, {
     times = -1,
 }: IEventRegistOption & {order: number}): IEventItem {
     const id = ++ event.id;
+    if (once) { times = 1; }
     return {
         eventName: event.eventName,
         listener,
@@ -32,14 +34,28 @@ export function createListener (event: Event, {
     };
 }
 
-export function triggerListenerItem (listenerItem: IEventItem) {
+export function triggerListenerItem (listenerItem?: IEventItem, data?: any, firstEmit?: boolean) {
+    if (!listenerItem || listenerItem.timesLeft === 0) return;
+    listenerItem.hasTrigger = true;
+
+    if (listenerItem.timesLeft > 0) {
+        listenerItem.timesLeft --;
+    }
+
     const event = getEvent(listenerItem.eventName);
 
-    listenerItem.listener(event._triggerData, buildListenOption({
-        firstEmit: event.hasTrigger === false,
+    if (typeof firstEmit === 'undefined') {
+        firstEmit = event.hasTrigger === false;
+    }
+    const emitOption = buildListenOption({
+        firstEmit,
         item: listenerItem,
         event
-    }));
+    });
+    listenerItem.listener(data, emitOption);
+    triggerOnEmit({
+        eventName: event.eventName, data, ...emitOption
+    });
 }
 
 function buildListenOption ({

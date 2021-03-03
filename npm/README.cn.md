@@ -265,7 +265,34 @@ console.log(result);
 // [1, 2, 3, 1, 3]
 ```
 
-#### 4.7 order 参数
+#### 4.7 times 参数
+
+times 参数 监听触发的次数
+
+```js
+const eventName = 'test-times';
+const result = [];
+
+event.regist(eventName, {
+    times: 1,
+    listener () { result.push(1);}
+});
+event.regist(eventName, {
+    times: 2,
+    listener () { result.push(2);}
+});
+event.regist(eventName, {
+    times: 3,
+    listener () { result.push(3);}
+});
+event.emit(eventName);
+event.emit(eventName);
+event.emit(eventName);
+event.emit(eventName);
+// [1, 2, 3, 2, 3, 3]
+```
+
+#### 4.8 order 参数
 
 控制插入事件的序号（和 index参数有区别）
 
@@ -307,7 +334,7 @@ event.emit(eventName);
 console.log(result);
 ```
 
-#### 4.8 single 参数
+#### 4.9 single 参数
 
 单例监听模式，对某个事件名启用 single 参数会覆盖之前该事件的所有监听函数
 
@@ -352,7 +379,7 @@ event.emit(eventName);
 console.log(result);
 // [1, 2, 4, 5]
 ```
-#### 4.9 name 参数
+#### 4.10 name 参数
 
 name 参数用来给一个监听增加一个参数
 
@@ -371,7 +398,7 @@ const item2 = event.regist(eventName, {
 // item2.name === 'listener-name'
 ```
 
-#### 4.10 head 参数
+#### 4.11 head 参数
 
 head参数用于将监听添加到事件头部
 
@@ -401,7 +428,7 @@ event.emit(eventName);
 // result: [5, 4, 3, 2, 1]
 ```
 
-#### 4.11 tail 参数
+#### 4.12 tail 参数
 
 tail参数用于将监听添加到事件尾部
 
@@ -434,7 +461,7 @@ event.emit(eventName);
 // result: [1, 4, 2, 3, 5, 6]
 ```
 
-#### 4.12 order 函数
+#### 4.13 order 函数
 
 获取某个监听的序号
 
@@ -463,7 +490,7 @@ console.log([result, event.order(eventName), e1.order, e2.order]);
 // [[1, 4, 2, 3, 5], 4, 3, 1
 ```
 
-#### 4.13 remove 函数
+#### 4.14 remove 函数
 
 移除事件监听
 
@@ -496,7 +523,7 @@ console.log(result);
 // [1, 2, 3, 7, 5, 1, 2, 3, 7, 7]
 ```
 
-#### 4.14 registNotImmediate
+#### 4.15 registNotImmediate
 
 ```js
 event.registNotImmediate('xxx', ()=>{})
@@ -507,7 +534,7 @@ event.regist('xxx', {
 })
 ```
 
-#### 4.15 registOnce
+#### 4.16 registOnce
 
 ```js
 event.registOnce('xxx', ()=>{})
@@ -518,7 +545,7 @@ event.regist('xxx', {
 })
 ```
 
-#### 4.16 registNotImmediateOnce
+#### 4.17 registNotImmediateOnce
 
 ```js
 event.registNotImmediateOnce('xxx', ()=>{})
@@ -530,7 +557,7 @@ event.regist('xxx', {
 })
 ```
 
-#### 4.17 registSingle
+#### 4.18 registSingle
 
 ```js
 event.registSingle('xxx', ()=>{})
@@ -541,7 +568,7 @@ event.regist('xxx', {
 })
 ```
 
-#### 4.18 监听回调参数
+#### 4.19 监听回调参数
 
 监听函数第二个参数是一个json，包含有三个属性
 
@@ -556,7 +583,7 @@ event.regist('xxx', (data, {firstEmit, item, remove, clear})=>{
 })
 ```
 
-#### 4.19 链式调用
+#### 4.20 链式调用
 
 regist函数当指传入事件名时会启用链式调用
 
@@ -571,6 +598,7 @@ event.regist('xxx')
     .notImmediate()
     .single()
     .once()
+    .times(1)
     .listener()
     .name('xxx')
     .head()
@@ -592,6 +620,7 @@ interface ILink {
     name: (name: string) => ILink;
     head: () => ILink;
     tail: ()=> ILink;
+    times: (times: number)=> ILink;
     listen: (listener?: IEventListener) => IEventItem;
 }
 ```
@@ -610,6 +639,7 @@ export interface IEventRegistOption {
     listener: IEventListener;
     immediate?: boolean;
     once?: boolean;
+    times?: number;
     order?: number;
     orderBefore?: boolean;
     index?: number;
@@ -642,5 +672,7 @@ export interface IEventItem {
     name: string;
     head: boolean;
     tail: boolean;
+    times: number;
+    timesLeft: number;
 }
 ```

@@ -262,8 +262,34 @@ event.emit(eventName);
 console.log(result);
 // [1, 2, 3, 1, 3]
 ```
+#### 4.7 times parameter
 
-#### 4.7 order parameter
+The times parameter is the number of times the monitor is triggered
+
+```js
+const eventName = 'test-times';
+const result = [];
+
+event.regist(eventName, {
+    times: 1,
+    listener () { result.push(1);}
+});
+event.regist(eventName, {
+    times: 2,
+    listener () { result.push(2);}
+});
+event.regist(eventName, {
+    times: 3,
+    listener () { result.push(3);}
+});
+event.emit(eventName);
+event.emit(eventName);
+event.emit(eventName);
+event.emit(eventName);
+// [1, 2, 3, 2, 3, 3]
+```
+
+#### 4.8 order parameter
 
 Control the sequence number of the insertion event (different from the index parameter)
 
@@ -305,7 +331,7 @@ event.emit(eventName);
 console.log(result);
 ```
 
-#### 4.8 single parameter
+#### 4.9 single parameter
 
 Singleton monitoring mode, enabling the single parameter for an event name will overwrite all previous monitoring functions for the event
 
@@ -351,7 +377,7 @@ console.log(result);
 // [1, 2, 4, 5]
 ```
 
-#### 4.9 name parameter
+#### 4.10 name parameter
 
 The name parameter is used to add a parameter to a monitor
 
@@ -370,7 +396,7 @@ const item2 = event.regist(eventName, {
 // item2.name === 'listener-name'
 ```
 
-#### 4.10 head parameters
+#### 4.11 head parameters
 
 The head parameter is used to add the listener to the event head
 
@@ -401,7 +427,7 @@ event.emit(eventName);
 // result: [5, 4, 3, 2, 1]
 ```
 
-#### 4.11 tail parameters
+#### 4.12 tail parameters
 
 The tail parameter is used to add the listener to the end of the event
 
@@ -434,7 +460,7 @@ event.emit(eventName);
 // result: [1, 4, 2, 3, 5, 6]
 ```
 
-#### 4.12 order method
+#### 4.13 order method
 
 Get the serial number of a monitor
 
@@ -463,7 +489,7 @@ console.log([result, event.order(eventName), e1.order, e2.order]);
 // [[1, 4, 2, 3, 5], 4, 3, 1
 ```
 
-#### 4.13 remove method
+#### 4.14 remove method
 
 Remove event listener
 
@@ -496,7 +522,7 @@ console.log(result);
 // [1, 2, 3, 7, 5, 1, 2, 3, 7, 7]
 ```
 
-#### 4.14 registNotImmediate
+#### 4.15 registNotImmediate
 
 ```js
 event.registNotImmediate('xxx', ()=>{})
@@ -507,7 +533,7 @@ event.regist('xxx', {
 })
 ```
 
-#### 4.15 registOnce
+#### 4.16 registOnce
 
 ```js
 event.registOnce('xxx', ()=>{})
@@ -518,7 +544,7 @@ event.regist('xxx', {
 })
 ```
 
-#### 4.16 registNotImmediateOnce
+#### 4.17 registNotImmediateOnce
 
 ```js
 event.registNotImmediateOnce('xxx', ()=>{})
@@ -530,7 +556,7 @@ event.regist('xxx', {
 })
 ```
 
-#### 4.17 registSingle
+#### 4.18 registSingle
 
 ```js
 event.registSingle('xxx', ()=>{})
@@ -541,7 +567,7 @@ event.regist('xxx', {
 })
 ```
 
-#### 4.18 Monitor callback parameters
+#### 4.19 Monitor callback parameters
 
 The second parameter of the monitoring function is a json, which contains three attributes
 
@@ -556,7 +582,7 @@ event.regist('xxx', (data, {firstEmit, item, remove, clear})=>{
 })
 ```
 
-#### 4.19 Chain call
+#### 4.20 Chain call
 
 The regist function will enable chained calls when referring to the incoming event name
 
@@ -570,6 +596,7 @@ event.regist('xxx')
     .notImmediate()
     .single()
     .once()
+    .times(1)
     .listener()
     .name('xxx')
     .head()
@@ -591,6 +618,7 @@ interface ILink {
     name: (name: string) => ILink;
     head: () => ILink;
     tail: ()=> ILink;
+    times: (times: number)=> ILink;
     listen: (listener?: IEventListener) => IEventItem;
 }
 ```
@@ -609,6 +637,7 @@ export interface IEventRegistOption {
     listener: IEventListener;
     immediate?: boolean;
     once?: boolean;
+    times?: number;
     order?: number;
     orderBefore?: boolean;
     index?: number;
@@ -641,5 +670,7 @@ export interface IEventItem {
     name: string;
     head: boolean;
     tail: boolean;
+    times: number;
+    timesLeft: number;
 }
 ```

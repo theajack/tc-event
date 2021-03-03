@@ -13,6 +13,7 @@ export interface IEventRegistOption {
     listener: IEventListener;
     immediate?: boolean;
     once?: boolean;
+    times?: number;
     order?: number;
     orderBefore?: boolean;
     index?: number;
@@ -43,6 +44,8 @@ export interface IEventItem {
     name: string;
     head: boolean;
     tail: boolean;
+    times: number;
+    timesLeft: number;
 }
 
 export interface ILockerFn {index: number, func:()=>any}
@@ -76,5 +79,6 @@ export interface ILink {
     name: (name: string) => ILink;
     head: () => ILink;
     tail: ()=> ILink;
+    times: (times: number)=> ILink;
     listen: (listener?: IEventListener) => IEventItem;
 }
