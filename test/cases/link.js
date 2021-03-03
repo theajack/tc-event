@@ -43,6 +43,12 @@ module.exports = {
             .listen(() => {
                 result.push(6);
             });
+            
+        event.regist(eventName)
+            .single()
+            .listen(() => {
+                result.push(6);
+            });
         event.emit(eventName);
 
         return result;

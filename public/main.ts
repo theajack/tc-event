@@ -68,6 +68,7 @@ declare global {
         registEvent: ()=>void;
         ev: any;
         t2: any;
+        events: any;
     }
 }
 window.registEvent = registEvent;

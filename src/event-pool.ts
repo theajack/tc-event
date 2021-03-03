@@ -8,8 +8,8 @@ import {isUndf} from './util';
 let events: IJson<Event> = {}; // 事件回调函数字典
 let EVENT: IJson<string> = {}; // 事件名称字典
 
-export function getEvent (name: TEventName) {
-    return events[nameToStr(name)];
+export function getEvent (eventName: TEventName) {
+    return events[nameToStr(eventName)];
 }
 export function setEvent (eventName: TEventName) {
     const name = nameToStr(eventName);
@@ -21,11 +21,11 @@ export function delEvent (eventName: TEventName) {
     delete EVENT[nameToStr(eventName)];
 }
 
-export function getEVENT (name?: TEventName) {
-    if (isUndf(name)) {
+export function getEVENT (eventName?: TEventName) {
+    if (isUndf(eventName)) {
         return EVENT;
     }
-    return EVENT[nameToStr(name as TEventName)];
+    return EVENT[nameToStr(eventName as TEventName)];
 }
 
 export function clearEvent () {

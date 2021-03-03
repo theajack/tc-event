@@ -1,18 +1,21 @@
 
 测试结果: 通过
-测试用例数: 14
-总耗时: 4ms
+测试用例数: 17
+总耗时: 5ms
 ----------------------------
 测试用例详细数据:
 ----------------------------
 【测试别名函数】: 通过 / 1ms
 输出结果: [1,2,3,5]
 
-【测试checkEvent参数】: 通过 / 1ms
+【测试checkEvent参数】: 通过 / 0ms
 输出结果: [false,true,true,false,true,false]
 
 【测试clear参数】: 通过 / 0ms
 输出结果: [1,2]
+
+【测试 head】: 通过 / 1ms
+输出结果: [5,4,3,2,1]
 
 【测试immediate参数】: 通过 / 0ms
 输出结果: [1,2]
@@ -21,13 +24,16 @@
 输出结果: [9,5,7,1,6,2,3,4,8]
 
 【测试interceptor参数】: 通过 / 0ms
-输出结果: ["onRegist: test-interceptor1","onRegist: test-interceptor2","onEmit: test-interceptor1 test-interceptor1 data true","onEmit: test-interceptor2 test-interceptor2 data true","onEmit: test-interceptor2 test-interceptor2 data2 false"]
+输出结果: ["onRegist: test-interceptor1","onRegist: test-interceptor2","onEmit: test-interceptor1 test-interceptor1 data true 1","onEmit: test-interceptor2 test-interceptor2 data true 1","onEmit: test-interceptor2 test-interceptor2 data2 false 1"]
 
 【测试链式调用】: 通过 / 0ms
 输出结果: [1,2,3,4,6]
 
-【测试event时序】: 通过 / 2ms
+【测试event时序】: 通过 / 3ms
 输出结果: ["ibb0","ib0","i0","1","2b","2","2a","3","4","5","1000"]
+
+【测试name】: 通过 / 0ms
+输出结果: ["test-name-1","listener-name"]
 
 【测试once参数】: 通过 / 0ms
 输出结果: [1,2,3,1,3]
@@ -39,12 +45,15 @@
 输出结果: [3,6,1,4,5,2,8,7]
 
 【测试registOption】: 通过 / 0ms
-输出结果: [1,true,1,false,1,false,1]
+输出结果: [1,true,2,1,false,2,1,false,2,1]
 
 【测试once参数】: 通过 / 0ms
 输出结果: [1,2,3,7,5,1,2,3,7,7]
 
 【测试single参数】: 通过 / 0ms
 输出结果: [1,2,4,5]
+
+【测试 tail】: 通过 / 0ms
+输出结果: [1,4,2,3,5,6]
 
 

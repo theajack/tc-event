@@ -3,22 +3,23 @@
 
 import {findPos} from './util';
 import {createLocker} from './locker';
-import {TEventName, IEventListener, IEventItem, ILockerFn} from './type';
+import {TEventName, IEventListener, IEventItem, ILockerFn, IEventRegistOption} from './type';
 import {triggerOnRegist, triggerOnEmit} from './interceptor';
+// import {createListener, triggerListenerItem} from './listener';
 
 
 export class Event {
-    name: TEventName;
+    eventName: TEventName;
     id: number;
     hasTrigger: boolean;
     private listeners: Array<IEventItem | undefined>;
     order: number;
-    private _triggerData: any;
+    _triggerData: any;
     private _locker: {add ({index, func}: ILockerFn): void; lock (fn: () => any): any;};
     singleMode: boolean;
-    constructor (name: TEventName) {
+    constructor (eventName: TEventName) {
         // 对于ready之类的事件 增加一个如果已经触发了就马上执行的逻辑
-        this.name = name;
+        this.eventName = eventName;
         this._init();
     }
     private _init () {
@@ -31,20 +32,29 @@ export class Event {
         this.listeners = [];
     }
     private _countInsertIndex ({
-        index, order, orderBefore = false
+        index, order, orderBefore = false, head, tail
     }: {
-        index?: number; order?: number; orderBefore?: boolean
+        index?: number; order?: number; orderBefore: boolean; head: boolean, tail: boolean
     }) {
         let insertIndex: number;
         const n = this.listeners.length;
+        // 优先级 head > tail > index > order
+        if (head) {
+            index = 0;
+        } else if (tail) {
+            index = n;
+        }
+        
         if (typeof index === 'number') {
             if (index > n) {index = n;}
             else if (index < 0) {index = 0;}
-            const item = this.listeners[index];
+            // index 插入的order等于插入位置的order
+            const item = this.listeners[index === n ? index - 1 : index];
             order = item ? item.order : ++ this.order;
             insertIndex = index;
         } else {
             if (typeof order !== 'number') {
+                // 默认插入的监听 按照事件的order排序
                 order = ++ this.order;
             }
             insertIndex = (n === 0 || order > this._findLastOrder()) ? n : findPos(this.listeners, order, orderBefore);
@@ -53,21 +63,17 @@ export class Event {
     }
     regist ({
         listener,
-        once = false,
         immediate = true,
+        once = false,
         order,
         orderBefore = false,
         index,
         single = false,
-    }: {
-        listener: IEventListener;
-        once?: boolean;
-        immediate?: boolean;
-        order?: number;
-        orderBefore?: boolean;
-        index?: number;
-        single?: boolean;
-    }) {
+        name = '',
+        head = false,
+        tail = false,
+        times = -1,
+    }: IEventRegistOption) {
         this.singleMode = (this.singleMode || single);
 
         let insertIndex: number;
@@ -77,33 +83,51 @@ export class Event {
             order = 0;
         } else {
             const result = this._countInsertIndex({
-                index, order, orderBefore
+                index, order, orderBefore, head, tail
             });
             insertIndex = result.insertIndex;
             order = result.order;
         }
-
+        const id = ++ this.id;
         const item: IEventItem = {
-            name: this.name,
+            eventName: this.eventName,
             listener,
             once,
             immediate,
             hasTrigger: false,
             order,
-            id: ++this.id,
+            id,
+            name: name || (`${this.eventName}-${id}`),
             single: this.singleMode,
+            head,
+            tail,
+            orderBefore,
+            times,
+            timesLeft: times,
         };
+        // const item = createListener(this, {
+        //     listener,
+        //     immediate,
+        //     once,
+        //     order,
+        //     orderBefore,
+        //     name,
+        //     head,
+        //     tail,
+        //     times,
+        // });
         
-        triggerOnRegist({name: this.name, item});
+        triggerOnRegist({eventName: this.eventName, item});
+
         this._locker.add({
             index: insertIndex,
             func: () => {this.listeners.splice(insertIndex, 0, item);}
         });
         if (immediate && this.hasTrigger) {
-            if (once) {item.hasTrigger = true;}
+            // triggerListenerItem(item);
             listener(this._triggerData, this._buildListenOption({
                 firstEmit: false,
-                id: item.id
+                item
             }));
         }
         return item;
@@ -117,14 +141,15 @@ export class Event {
         return 0;
     }
     private _buildListenOption ({
-        firstEmit, id
+        firstEmit, item
     }: {
         firstEmit: boolean;
-        id: number;
+        item: IEventItem;
     }) {
         return {
             firstEmit,
-            remove: () => this.remove(id),
+            item,
+            remove: () => this.remove(item.id),
             clear: () => this.clear()
         };
     }
@@ -137,10 +162,10 @@ export class Event {
                 const item = this.listeners[i];
                 if (item && (!item.once || !item.hasTrigger)) {
                     item.hasTrigger = true;
-                    const emitOption = this._buildListenOption({firstEmit, id: item.id});
+                    const emitOption = this._buildListenOption({firstEmit, item});
                     item.listener(data, emitOption);
                     triggerOnEmit({
-                        name: this.name, item, data, ...emitOption
+                        eventName: this.eventName, data, ...emitOption
                     });
                 }
             }

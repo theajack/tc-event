@@ -2,7 +2,7 @@ module.exports = {
     name: '测试index参数',
     test ({event}) {
         event.clear();
-        const eventName = 'test-index';
+        const eventName = 'test-order';
             
         const result = [];
         event.regist(eventName, () => {

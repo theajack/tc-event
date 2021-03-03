@@ -11,8 +11,8 @@ module.exports = {
                 clear();
             }
         });
-        event.regist(eventName, (method, {firstEmit, remove}) => {
-            result.push(firstEmit);
+        event.regist(eventName, (method, {firstEmit, remove, item}) => {
+            result.push(firstEmit, item.id);
             if (method === 'remove') {
                 remove();
             }
@@ -25,6 +25,18 @@ module.exports = {
         event.emit(eventName);
         return result;
     },
-    expect: [1, true, 1, false, 1, false, 1],
+    expect: [
+        // 第一次emit
+        1,
+        true, 2,
+        // 第二次emit
+        1,
+        false, 2,
+        // 第三次emit
+        1,
+        false, 2,
+        // 第四次emit
+        1
+    ],
 };
 

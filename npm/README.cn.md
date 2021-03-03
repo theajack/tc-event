@@ -8,7 +8,7 @@
 <p>
     <a href="https://www.npmjs.com/package/tc-event"><img src="https://img.shields.io/npm/v/tc-event.svg" alt="Version"></a>
     <a href="https://npmcharts.com/compare/tc-event?minimal=true"><img src="https://img.shields.io/npm/dm/tc-event.svg" alt="Downloads"></a>
-    <a href="https://cdn.jsdelivr.net/gh/theajack/tc-event/dist/tc-event.latest.min.js"><img src="https://img.shields.io/bundlephobia/minzip/tc-event.svg" alt="Size"></a>
+    <a href="https://cdn.jsdelivr.net/npm/tc-event/tc-event.min.js"><img src="https://img.shields.io/bundlephobia/minzip/tc-event.svg" alt="Size"></a>
     <a href="https://github.com/theajack/tc-event/blob/master/LICENSE"><img src="https://img.shields.io/npm/l/tc-event.svg" alt="License"></a>
     <a href="https://github.com/theajack/tc-event/search?l=typescript"><img src="https://img.shields.io/github/languages/top/theajack/tc-event.svg" alt="TopLang"></a>
     <a href="https://github.com/theajack/tc-event/issues"><img src="https://img.shields.io/github/issues-closed/theajack/tc-event.svg" alt="issue"></a>
@@ -63,6 +63,8 @@ event.emit('myEvent', 'Aha!');
 
 ### 3 api
 
+详情请参考 [index.d.ts](https://github.com/theajack/tc-event/blob/master/src/index.d.ts)
+
 ```ts
 interface IEventStatic {
     version: string;
@@ -70,20 +72,27 @@ interface IEventStatic {
     emit(name: TEventName, data?: any): boolean; // 触发事件
     onEmit(fn: IOnInterceptorEmit): void;
     regist(name: TEventName, listener: IEventListener | IEventRegistOption): IEventItem;
-    regist(name: IRegistObject, listener: IEventListener | IEventRegistOption): IEventItem;
+    regist(name: TEventName): ILink;
     regist(name: IJson<IEventRegistOption>): IJson<IEventItem>;
+    regist(name: IRegistObject): IEventItem;
     onRegist(fn: IOnInterceptorRegist): void;
     checkEvent(name: TEventName): boolean; // 检查是否存在事件
     remove(name: TEventName, cond: number | IEventListener, imme?: boolean): boolean;
     remove(eventItem: IEventItem, imme?: boolean): boolean;
     clear(name?: TEventName | TEventName[]): void;
     order(name: TEventName): number;
+    registNotImmediate(name: TEventName, listener: IEventListener): IEventItem;
+    registNotImmediateOnce(name: TEventName, listener: IEventListener): IEventItem;
+    registOnce(name: TEventName, listener: IEventListener): IEventItem;
+    registSingle(name: TEventName, listener: IEventListener): IEventItem;
 }
 ```
 
 ### 4 使用实例
 
 #### 4.1 checkEvent
+
+判断事件是否存在
 
 ```js
 const eventName = 'test-checkEvent';
@@ -343,8 +352,89 @@ event.emit(eventName);
 console.log(result);
 // [1, 2, 4, 5]
 ```
+#### 4.9 name 参数
 
-#### 4.9 order 函数
+name 参数用来给一个监听增加一个参数
+
+默认值为 eventName + id
+
+```js
+const eventName = 'test-name';
+    
+const item1 = event.regist(eventName, () => {
+});
+const item2 = event.regist(eventName, {
+    name: 'listener-name',
+    listener () {}
+});
+// item1.name === 'test-name-1'
+// item2.name === 'listener-name'
+```
+
+#### 4.10 head 参数
+
+head参数用于将监听添加到事件头部
+
+```js
+const eventName = 'test-head';
+const result = [];
+event.regist(eventName, () => {
+    result.push(1);
+});
+event.regist(eventName, {
+    order: -1,
+    listener () {result.push(2);}
+});
+event.regist(eventName, {
+    index: -1,
+    listener () {result.push(3);}
+});
+event.regist(eventName, {
+    head: true,
+    listener () {result.push(4);}
+});
+event.regist(eventName, {
+    head: true,
+    listener () {result.push(5);}
+});
+event.emit(eventName);
+// result: [5, 4, 3, 2, 1]
+```
+
+#### 4.11 tail 参数
+
+tail参数用于将监听添加到事件尾部
+
+```js
+const eventName = 'test-tail';
+const result = [];
+event.regist(eventName, () => {
+    result.push(1);
+});
+event.regist(eventName, {
+    order: 100,
+    listener () {result.push(2);}
+});
+event.regist(eventName, {
+    index: 100,
+    listener () {result.push(3);}
+});
+event.regist(eventName, {
+    listener () {result.push(4);}
+});
+event.regist(eventName, {
+    tail: true,
+    listener () {result.push(5);}
+});
+event.regist(eventName, {
+    tail: true,
+    listener () {result.push(6);}
+});
+event.emit(eventName);
+// result: [1, 4, 2, 3, 5, 6]
+```
+
+#### 4.12 order 函数
 
 获取某个监听的序号
 
@@ -373,7 +463,7 @@ console.log([result, event.order(eventName), e1.order, e2.order]);
 // [[1, 4, 2, 3, 5], 4, 3, 1
 ```
 
-#### 4.10 remove 函数
+#### 4.13 remove 函数
 
 移除事件监听
 
@@ -406,7 +496,7 @@ console.log(result);
 // [1, 2, 3, 7, 5, 1, 2, 3, 7, 7]
 ```
 
-#### 4.11 registNotImmediate
+#### 4.14 registNotImmediate
 
 ```js
 event.registNotImmediate('xxx', ()=>{})
@@ -417,7 +507,7 @@ event.regist('xxx', {
 })
 ```
 
-#### 4.12 registOnce
+#### 4.15 registOnce
 
 ```js
 event.registOnce('xxx', ()=>{})
@@ -428,7 +518,7 @@ event.regist('xxx', {
 })
 ```
 
-#### 4.13 registNotImmediateOnce
+#### 4.16 registNotImmediateOnce
 
 ```js
 event.registNotImmediateOnce('xxx', ()=>{})
@@ -440,7 +530,7 @@ event.regist('xxx', {
 })
 ```
 
-#### 4.14 registSingle
+#### 4.17 registSingle
 
 ```js
 event.registSingle('xxx', ()=>{})
@@ -451,21 +541,22 @@ event.regist('xxx', {
 })
 ```
 
-#### 4.15 监听回调参数
+#### 4.18 监听回调参数
 
 监听函数第二个参数是一个json，包含有三个属性
 
 1. firstEmit 表示该监听是否是首次触发
 2. remove 是移除当前监听的方法
 3. clear 是移除当前事件的方法
+4. item 是当前的监听对象
 
 ```js
-event.regist('xxx', (data, {firstEmit, remove, clear})=>{
+event.regist('xxx', (data, {firstEmit, item, remove, clear})=>{
 
 })
 ```
 
-#### 4.16 链式调用
+#### 4.19 链式调用
 
 regist函数当指传入事件名时会启用链式调用
 
@@ -481,6 +572,9 @@ event.regist('xxx')
     .single()
     .once()
     .listener()
+    .name('xxx')
+    .head()
+    .tail()
     .listen();
 ```
 
@@ -495,6 +589,9 @@ interface ILink {
     order: (order: number) => ILink;
     orderBefore: (orderBefore: boolean) => ILink;
     listener: (listener: IEventListener) => ILink;
+    name: (name: string) => ILink;
+    head: () => ILink;
+    tail: ()=> ILink;
     listen: (listener?: IEventListener) => IEventItem;
 }
 ```
@@ -506,6 +603,8 @@ interface ILink {
  3. IEventListener
  5. IEventItem
 
+详情请参考 [index.d.ts](https://github.com/theajack/tc-event/blob/master/src/index.d.ts)
+
 ```ts
 export interface IEventRegistOption {
     listener: IEventListener;
@@ -515,6 +614,9 @@ export interface IEventRegistOption {
     orderBefore?: boolean;
     index?: number;
     single?: boolean;
+    head?: boolean;
+    tail?: boolean;
+    name?: string;
 }
 export interface IRegistObject {
     [key: string]: IEventRegistOption;
@@ -522,18 +624,23 @@ export interface IRegistObject {
 export interface IEventListener {
     (data: any, listenOption: {
         firstEmit: boolean;
+        item: IEventItem;
         remove: () => boolean;
         clear: () => boolean;
     }): void;
 }
 export interface IEventItem {
-    name: TEventName;
+    eventName: TEventName;
     listener: IEventListener;
     immediate: boolean;
     once: boolean;
     order: number;
+    orderBefore: boolean;
     hasTrigger: boolean;
     id: number;
     single: boolean;
+    name: string;
+    head: boolean;
+    tail: boolean;
 }
 ```

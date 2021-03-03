@@ -3,6 +3,7 @@ export type TEventName = string | number;
 export interface IEventListener {
     (data: any, listenOption: {
         firstEmit: boolean;
+        item: IEventItem;
         remove: () => boolean;
         clear: () => boolean;
     }): void;
@@ -16,6 +17,9 @@ export interface IEventRegistOption {
     orderBefore?: boolean;
     index?: number;
     single?: boolean;
+    head?: boolean;
+    tail?: boolean;
+    name?: string;
 }
 
 export interface IJson<T> {
@@ -27,31 +31,35 @@ export interface IRegistObject {
 }
 
 export interface IEventItem {
-    name: TEventName;
+    eventName: TEventName;
     listener: IEventListener;
     immediate: boolean;
     once: boolean;
     order: number;
+    orderBefore: boolean;
     hasTrigger: boolean;
     id: number;
     single: boolean;
+    name: string;
+    head: boolean;
+    tail: boolean;
 }
 
 export interface ILockerFn {index: number, func:()=>any}
 
 export interface IOnInterceptorRegist {
     (data: {
-        name: TEventName,
+        eventName: TEventName,
         item: IEventItem
     }): void
 }
 
 export interface IOnInterceptorEmit {
     (data: {
-        name: TEventName;
-        item: IEventItem;
+        eventName: TEventName;
         data: any;
         firstEmit: boolean;
+        item: IEventItem;
         remove: () => boolean;
         clear: () => boolean;
     }): void
@@ -65,5 +73,8 @@ export interface ILink {
     order: (order: number) => ILink;
     orderBefore: (orderBefore?: boolean) => ILink;
     listener: (listener: IEventListener) => ILink;
+    name: (name: string) => ILink;
+    head: () => ILink;
+    tail: ()=> ILink;
     listen: (listener?: IEventListener) => IEventItem;
 }

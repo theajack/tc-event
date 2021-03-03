@@ -6,7 +6,8 @@ export function isObject (v: any) {return typeof v === 'object';}
 export function findPos (array: any[], order: number, orderBefore: boolean) {
     const n = array.length;
     if (n === 0) {return 0;}
-    return bsearch(array, 0, n - 1, order, orderBefore);
+    const result = bsearch(array, 0, n - 1, order, orderBefore);
+    return result;
 }
 
 export function bsearch (array: any[], low: number, high: number, order: number, orderBefore: boolean): number {

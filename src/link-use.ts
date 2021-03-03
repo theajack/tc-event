@@ -1,11 +1,11 @@
 import {IEventRegistOption, TEventName, IEventListener, ILink} from './type';
 import {registBase} from './index';
 
-export function createEventLink (name: TEventName): ILink {
+export function createEventLink (eventName: TEventName): ILink {
     const options: IEventRegistOption & {
-        name: TEventName;
+        eventName: TEventName;
     } = {
-        name,
+        eventName,
         listener: () => {}
     };
     return {
@@ -21,8 +21,20 @@ export function createEventLink (name: TEventName): ILink {
             options.once = once;
             return this;
         },
-        index  (index: number) {
+        index (index: number) {
             options.index = index;
+            return this;
+        },
+        head () {
+            options.head = true;
+            return this;
+        },
+        tail () {
+            options.tail = true;
+            return this;
+        },
+        name (name) {
+            options.name = name;
             return this;
         },
         orderBefore (orderBefore = true) {

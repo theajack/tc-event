@@ -63,6 +63,8 @@ event.emit('myEvent', 'Aha!');
 
 ### 3 api
 
+For details, please refer to [index.d.ts](https://github.com/theajack/tc-event/blob/master/src/index.d.ts)
+
 ```ts
 interface IEventStatic {
     version: string;
@@ -89,6 +91,8 @@ interface IEventStatic {
 ### 4 Use case
 
 #### 4.1 checkEvent
+
+Determine whether the event exists
 
 ```js
 const eventName = 'test-checkEvent';
@@ -347,7 +351,90 @@ console.log(result);
 // [1, 2, 4, 5]
 ```
 
-#### 4.9 order method
+#### 4.9 name parameter
+
+The name parameter is used to add a parameter to a monitor
+
+The default value is eventName + id
+
+```js
+const eventName = 'test-name';
+    
+const item1 = event.regist(eventName, () => {
+});
+const item2 = event.regist(eventName, {
+    name: 'listener-name',
+    listener () {}
+});
+// item1.name === 'test-name-1'
+// item2.name === 'listener-name'
+```
+
+#### 4.10 head parameters
+
+The head parameter is used to add the listener to the event head
+
+
+```js
+const eventName = 'test-head';
+const result = [];
+event.regist(eventName, () => {
+    result.push(1);
+});
+event.regist(eventName, {
+    order: -1,
+    listener () {result.push(2);}
+});
+event.regist(eventName, {
+    index: -1,
+    listener () {result.push(3);}
+});
+event.regist(eventName, {
+    head: true,
+    listener () {result.push(4);}
+});
+event.regist(eventName, {
+    head: true,
+    listener () {result.push(5);}
+});
+event.emit(eventName);
+// result: [5, 4, 3, 2, 1]
+```
+
+#### 4.11 tail parameters
+
+The tail parameter is used to add the listener to the end of the event
+
+```js
+const eventName = 'test-tail';
+const result = [];
+event.regist(eventName, () => {
+    result.push(1);
+});
+event.regist(eventName, {
+    order: 100,
+    listener () {result.push(2);}
+});
+event.regist(eventName, {
+    index: 100,
+    listener () {result.push(3);}
+});
+event.regist(eventName, {
+    listener () {result.push(4);}
+});
+event.regist(eventName, {
+    tail: true,
+    listener () {result.push(5);}
+});
+event.regist(eventName, {
+    tail: true,
+    listener () {result.push(6);}
+});
+event.emit(eventName);
+// result: [1, 4, 2, 3, 5, 6]
+```
+
+#### 4.12 order method
 
 Get the serial number of a monitor
 
@@ -376,7 +463,7 @@ console.log([result, event.order(eventName), e1.order, e2.order]);
 // [[1, 4, 2, 3, 5], 4, 3, 1
 ```
 
-#### 4.10 remove method
+#### 4.13 remove method
 
 Remove event listener
 
@@ -409,7 +496,7 @@ console.log(result);
 // [1, 2, 3, 7, 5, 1, 2, 3, 7, 7]
 ```
 
-#### 4.11 registNotImmediate
+#### 4.14 registNotImmediate
 
 ```js
 event.registNotImmediate('xxx', ()=>{})
@@ -420,7 +507,7 @@ event.regist('xxx', {
 })
 ```
 
-#### 4.12 registOnce
+#### 4.15 registOnce
 
 ```js
 event.registOnce('xxx', ()=>{})
@@ -431,7 +518,7 @@ event.regist('xxx', {
 })
 ```
 
-#### 4.13 registNotImmediateOnce
+#### 4.16 registNotImmediateOnce
 
 ```js
 event.registNotImmediateOnce('xxx', ()=>{})
@@ -443,7 +530,7 @@ event.regist('xxx', {
 })
 ```
 
-#### 4.14 registSingle
+#### 4.17 registSingle
 
 ```js
 event.registSingle('xxx', ()=>{})
@@ -454,21 +541,22 @@ event.regist('xxx', {
 })
 ```
 
-#### 4.15 Monitor callback parameters
+#### 4.18 Monitor callback parameters
 
 The second parameter of the monitoring function is a json, which contains three attributes
 
 1. firstEmit indicates whether the monitor is triggered for the first time
 2. remove is the method to remove the current monitor
 3. clear is the method to remove the current event
+4. item is the current monitoring object
 
 ```js
-event.regist('xxx', (data, {firstEmit, remove, clear})=>{
+event.regist('xxx', (data, {firstEmit, item, remove, clear})=>{
 
 })
 ```
 
-#### 4.16 Chain call
+#### 4.19 Chain call
 
 The regist function will enable chained calls when referring to the incoming event name
 
@@ -483,6 +571,9 @@ event.regist('xxx')
     .single()
     .once()
     .listener()
+    .name('xxx')
+    .head()
+    .tail()
     .listen();
 ```
 
@@ -497,6 +588,9 @@ interface ILink {
     order: (order: number) => ILink;
     orderBefore: (orderBefore: boolean) => ILink;
     listener: (listener: IEventListener) => ILink;
+    name: (name: string) => ILink;
+    head: () => ILink;
+    tail: ()=> ILink;
     listen: (listener?: IEventListener) => IEventItem;
 }
 ```
@@ -508,6 +602,8 @@ interface ILink {
  3. IEventListener
  5. IEventItem
 
+For details, please refer to [index.d.ts](https://github.com/theajack/tc-event/blob/master/src/index.d.ts)
+
 ```ts
 export interface IEventRegistOption {
     listener: IEventListener;
@@ -517,6 +613,9 @@ export interface IEventRegistOption {
     orderBefore?: boolean;
     index?: number;
     single?: boolean;
+    head?: boolean;
+    tail?: boolean;
+    name?: string;
 }
 export interface IRegistObject {
     [key: string]: IEventRegistOption;
@@ -524,18 +623,23 @@ export interface IRegistObject {
 export interface IEventListener {
     (data: any, listenOption: {
         firstEmit: boolean;
+        item: IEventItem;
         remove: () => boolean;
         clear: () => boolean;
     }): void;
 }
 export interface IEventItem {
-    name: TEventName;
+    eventName: TEventName;
     listener: IEventListener;
     immediate: boolean;
     once: boolean;
     order: number;
+    orderBefore: boolean;
     hasTrigger: boolean;
     id: number;
     single: boolean;
+    name: string;
+    head: boolean;
+    tail: boolean;
 }
 ```
