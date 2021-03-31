@@ -82,3 +82,15 @@ export interface ILink {
     times: (times: number)=> ILink;
     listen: (listener?: IEventListener) => IEventItem;
 }
+
+export interface CEvent {
+    eventName: TEventName;
+    id: number;
+    hasTrigger: boolean;
+    order: number;
+    singleMode: boolean;
+    regist(options: IEventRegistOption): IEventItem;
+    emit(data?: any): boolean;
+    remove(cond: number | IEventListener, immediate?: boolean): boolean;
+    clear(): boolean;
+}

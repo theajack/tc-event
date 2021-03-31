@@ -2,20 +2,23 @@
 // 事件类
 
 import {createLocker} from './locker';
-import {TEventName, IEventListener, IEventItem, ILockerFn, IEventRegistOption} from './type';
+import {TEventName, IEventListener, IEventItem, ILockerFn, IEventRegistOption, CEvent} from './type';
 import {triggerOnRegist} from './interceptor';
 import {createListener, triggerListenerItem} from './listener';
 import {countInsertIndex} from './listeners';
 
 
-export class Event {
+export class Event implements CEvent {
     eventName: TEventName;
     id: number;
     hasTrigger: boolean;
     private listeners: Array<IEventItem | undefined>;
     order: number;
     private _triggerData: any;
-    private _locker: {add ({index, func}: ILockerFn): void; lock (fn: () => any): any;};
+    private _locker: {
+        add ({index, func}: ILockerFn): void;
+        lock (fn: () => boolean): boolean;
+    };
     singleMode: boolean;
     constructor (eventName: TEventName) {
         // 对于ready之类的事件 增加一个如果已经触发了就马上执行的逻辑

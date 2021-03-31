@@ -17,7 +17,7 @@ export function createLocker () {
         add ({index, func}: ILockerFn) {
             locked ? list.push({index, func}) : func();
         },
-        lock (fn: ()=>any) {
+        lock (fn: () => boolean) {
             locked = true;
             const ret = fn();
             exec();
