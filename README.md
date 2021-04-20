@@ -1,17 +1,33 @@
 # [tc-event](https://www.github.com/theajack/tc-event)
 
 <p>
-    <a href="https://www.github.com/theajack/tc-event"><img src="https://img.shields.io/github/stars/theajack/tc-event.svg?style=social" alt="star"></a>
-    <a href="https://theajack.gitee.io"><img src="https://img.shields.io/badge/author-theajack-blue.svg?style=social" alt="Author"></a>
-</p> 
-
-<p>
-    <a href="https://www.npmjs.com/package/tc-event"><img src="https://img.shields.io/npm/v/tc-event.svg" alt="Version"></a>
-    <a href="https://npmcharts.com/compare/tc-event?minimal=true"><img src="https://img.shields.io/npm/dm/tc-event.svg" alt="Downloads"></a>
-    <a href="https://cdn.jsdelivr.net/npm/tc-event/tc-event.min.js"><img src="https://img.shields.io/bundlephobia/minzip/tc-event.svg" alt="Size"></a>
-    <a href="https://github.com/theajack/tc-event/blob/master/LICENSE"><img src="https://img.shields.io/npm/l/tc-event.svg" alt="License"></a>
-    <a href="https://github.com/theajack/tc-event/search?l=typescript"><img src="https://img.shields.io/github/languages/top/theajack/tc-event.svg" alt="TopLang"></a>
+    <a href="https://www.github.com/theajack/tc-event/stargazers" target="_black">
+        <img src="https://img.shields.io/github/stars/theajack/tc-event?logo=github" alt="stars" />
+    </a>
+    <a href="https://www.github.com/theajack/tc-event/network/members" target="_black">
+        <img src="https://img.shields.io/github/forks/theajack/tc-event?logo=github" alt="forks" />
+    </a>
+    <a href="https://www.npmjs.com/package/tc-event" target="_black">
+        <img src="https://img.shields.io/npm/v/tc-event?logo=npm" alt="version" />
+    </a>
+    <a href="https://www.npmjs.com/package/tc-event" target="_black">
+        <img src="https://img.shields.io/npm/dm/tc-event?color=%23ffca28&logo=npm" alt="downloads" />
+    </a>
+    <a href="https://www.jsdelivr.com/package/npm/tc-event" target="_black">
+        <img src="https://data.jsdelivr.com/v1/package/npm/tc-event/badge" alt="jsdelivr" />
+    </a>
     <a href="https://github.com/theajack/tc-event/issues"><img src="https://img.shields.io/github/issues-closed/theajack/tc-event.svg" alt="issue"></a>
+</p>
+<p>
+    <a href="https://github.com/theajack" target="_black">
+        <img src="https://img.shields.io/badge/Author-%20theajack%20-7289da.svg?&logo=github" alt="author" />
+    </a>
+    <a href="https://www.github.com/theajack/tc-event/blob/master/LICENSE" target="_black">
+        <img src="https://img.shields.io/github/license/theajack/tc-event?color=%232DCE89&logo=github" alt="license" />
+    </a>
+    <a href="https://cdn.jsdelivr.net/npm/tc-event/tc-event.min.js"><img src="https://img.shields.io/bundlephobia/minzip/tc-event.svg" alt="Size"></a>
+    <a href="https://github.com/theajack/tc-event/search?l=javascript"><img src="https://img.shields.io/github/languages/top/theajack/tc-event.svg" alt="TopLang"></a>
+    <a href="https://www.github.com/theajack/tc-event"><img src="https://img.shields.io/librariesio/dependent-repos/npm/tc-event.svg" alt="Dependent"></a>
     <a href="https://github.com/theajack/tc-event/blob/master/test/test-report.txt"><img src="https://img.shields.io/badge/test-passed-44BB44" alt="test"></a>
 </p>
 
