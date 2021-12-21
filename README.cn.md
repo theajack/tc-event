@@ -17,7 +17,7 @@
 
 <h3>🚀 功能强大、简单易用的事件库</h3>
 
-**[English](https://github.com/theajack/tc-event/blob/master/README.md) | [更新日志](https://github.com/theajack/tc-event/blob/master/helper/version.md) | [反馈错误/缺漏](https://github.com/theajack/tc-event/issues/new) | [Gitee](https://gitee.com/theajack/tc-event)**
+**[Online Use](https://theajack.gitee.io/jsbox?github=theajack.tc-event) | [English](https://github.com/theajack/tc-event/blob/master/README.md) | [更新日志](https://github.com/theajack/tc-event/blob/master/helper/version.md) | [反馈错误/缺漏](https://github.com/theajack/tc-event/issues/new) | [Gitee](https://gitee.com/theajack/tc-event)**
 
 ---
 

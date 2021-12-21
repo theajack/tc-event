@@ -33,7 +33,7 @@
 
 <h3>🚀 Powerful and easy-to-use event library</h3>
 
-**[Online Use](https://theajack.gitee.io/jsbox?theme=dark&lang=html&lib=https://cdn.jsdelivr.net/npm/tc-event/tc-event.min.js&code=DwZwxgTglgDgLgAhBMBeARACznGIBcA9IWACYB2AdAFYikCmANlAG4SXn1yHkwC2hOGAC09FvXLcho8ZMp8oVWugB8wQuGjwVAWABQwAEYBXHAHtyCC2GZgA1hnoK4AUVlwAFAEpVTqK-d1E3NyXQNNWDgwhBiEABU3CThKG3oAQwhvfVj4xLkIegBzKBBPAHI+AE88uDKAGgQAM2NyMDgoCwQPUjS4NK8EAG9snNi0xnoIcr84elIAQjKEAGoEHr6vAG4RmIBfLx2mlraOyxma72G9UdiE90oZjwrq93qEMoAJJkYzRa3D3b6dQRbRAA) | [中文](https://github.com/theajack/tc-event/blob/master/README.cn.md) | [Update Log](https://github.com/theajack/tc-event/blob/master/helper/version.md) | [Feedback bug](https://github.com/theajack/tc-event/issues/new) | [Gitee](https://gitee.com/theajack/tc-event)**
+**[Online Use](https://theajack.gitee.io/jsbox?github=theajack.tc-event) | [中文](https://github.com/theajack/tc-event/blob/master/README.cn.md) | [Update Log](https://github.com/theajack/tc-event/blob/master/helper/version.md) | [Feedback bug](https://github.com/theajack/tc-event/issues/new) | [Gitee](https://gitee.com/theajack/tc-event)**
 
 ---
 
