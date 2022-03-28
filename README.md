@@ -44,6 +44,7 @@
 3. Custom event sequence, multiple trigger modes
 4. Global interception mechanism
 5. Small size, easy to use
+6. Support for creating modules to avoid event conflicts
 
 ### 2. Quick use
 
@@ -82,25 +83,37 @@ event.emit('myEvent', 'Aha!');
 For details, please refer to [index.d.ts](https://github.com/theajack/tc-event/blob/master/src/index.d.ts)
 
 ```ts
+interface IRegistMethod {
+    (eventName: TEventName, listener: IEventListener | IEventRegistOption): IEventItem;
+    (eventName: IRegistObject): IJson<IEventItem>;
+    // 链式调用
+    (eventName: TEventName): ILink;
+}
+interface IRemoveMethod {
+    (name: TEventName, cond: number | IEventListener, imme?: boolean): boolean;
+    (eventItem: IEventItem, imme?: boolean): boolean;
+}
 interface IEventStatic {
     version: string;
     EVENT: IJson<string>; // event enumeration
     emit(name: TEventName, data?: any): boolean; // trigger event
     onEmit(fn: IOnInterceptorEmit): void;
-    regist(name: TEventName, listener: IEventListener | IEventRegistOption): IEventItem;
-    regist(name: IRegistObject, listener: IEventListener | IEventRegistOption): IEventItem;
-    regist(name: IJson<IEventRegistOption>): IJson<IEventItem>;
-    regist(name: TEventName): ILink;
+    regist: IRegistMethod;
     onRegist(fn: IOnInterceptorRegist): void;
     checkEvent(name: TEventName): boolean; // Check if there is an event
-    remove(name: TEventName, cond: number | IEventListener, imme?: boolean): boolean;
-    remove(eventItem: IEventItem, imme?: boolean): boolean;
+    remove: IRemoveMethod;
     clear(name?: TEventName | TEventName[]): void;
     order(name: TEventName): number;
     registNotImmediate(name: TEventName, listener: IEventListener): IEventItem;
     registNotImmediateOnce(name: TEventName, listener: IEventListener): IEventItem;
     registOnce(name: TEventName, listener: IEventListener): IEventItem;
     registSingle(name: TEventName, listener: IEventListener): IEventItem;
+    // event module
+    createModule (name: TModuleName): IEventModuleStatic;
+    getModule (): IJson<IEventModuleStatic>;
+    getModule (name: TModuleName): IEventModuleStatic;
+    removeModule(name: TModuleName): void;
+    clearModule(): void;
 }
 ```
 
@@ -637,6 +650,36 @@ interface ILink {
     times: (times: number)=> ILink;
     listen: (listener?: IEventListener) => IEventItem;
 }
+```
+
+#### 4.21 event module
+
+1. createModule
+
+```js
+const result = [];
+const name = 'module_event';
+const moduleA = event.createModule('A');
+const moduleB = event.createModule('B');
+
+moduleA.regist(name, data => {result.push('A' + data);});
+moduleB.regist(name, data => {result.push('B' + data);});
+
+moduleA.emit(name, 1);
+moduleA.emit(name, 2);
+console.log(result);
+```
+
+2. getModule
+
+```js
+event.createModule('A');
+event.createModule('B');
+
+console.log([
+    event.getModule('A').moduleName,
+    event.getModule('B').moduleName,
+]);
 ```
 
 ### 5 ts interface

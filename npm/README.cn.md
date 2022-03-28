@@ -17,7 +17,7 @@
 
 <h3>🚀 功能强大、简单易用的事件库</h3>
 
-**[English](https://github.com/theajack/tc-event/blob/master/README.md) | [更新日志](https://github.com/theajack/tc-event/blob/master/helper/version.md) | [反馈错误/缺漏](https://github.com/theajack/tc-event/issues/new) | [Gitee](https://gitee.com/theajack/tc-event)**
+**[Online Use](https://theajack.gitee.io/jsbox?github=theajack.tc-event) | [English](https://github.com/theajack/tc-event/blob/master/README.md) | [更新日志](https://github.com/theajack/tc-event/blob/master/helper/version.md) | [反馈错误/缺漏](https://github.com/theajack/tc-event/issues/new) | [Gitee](https://gitee.com/theajack/tc-event)**
 
 ---
 
@@ -28,6 +28,7 @@
 3. 自定义事件顺序、多种触发模式
 4. 全局拦截机制
 5. 体积小巧，简单易用
+6. 支持创建模块，避免事件冲突
 
 ### 2. 快速使用
 
@@ -66,25 +67,38 @@ event.emit('myEvent', 'Aha!');
 详情请参考 [index.d.ts](https://github.com/theajack/tc-event/blob/master/src/index.d.ts)
 
 ```ts
+interface IRegistMethod {
+    (eventName: TEventName, listener: IEventListener | IEventRegistOption): IEventItem;
+    (eventName: IRegistObject): IJson<IEventItem>;
+    // 链式调用
+    (eventName: TEventName): ILink;
+}
+interface IRemoveMethod {
+    (name: TEventName, cond: number | IEventListener, imme?: boolean): boolean;
+    (eventItem: IEventItem, imme?: boolean): boolean;
+}
 interface IEventStatic {
     version: string;
     EVENT: IJson<string>; // 事件枚举
     emit(name: TEventName, data?: any): boolean; // 触发事件
     onEmit(fn: IOnInterceptorEmit): void;
     regist(name: TEventName, listener: IEventListener | IEventRegistOption): IEventItem;
-    regist(name: TEventName): ILink;
-    regist(name: IJson<IEventRegistOption>): IJson<IEventItem>;
-    regist(name: IRegistObject): IEventItem;
+    regist: IRegistMethod;
     onRegist(fn: IOnInterceptorRegist): void;
     checkEvent(name: TEventName): boolean; // 检查是否存在事件
-    remove(name: TEventName, cond: number | IEventListener, imme?: boolean): boolean;
-    remove(eventItem: IEventItem, imme?: boolean): boolean;
+    remove: IRemoveMethod;
     clear(name?: TEventName | TEventName[]): void;
     order(name: TEventName): number;
     registNotImmediate(name: TEventName, listener: IEventListener): IEventItem;
     registNotImmediateOnce(name: TEventName, listener: IEventListener): IEventItem;
     registOnce(name: TEventName, listener: IEventListener): IEventItem;
     registSingle(name: TEventName, listener: IEventListener): IEventItem;
+    // 事件模块
+    createModule (name: TModuleName): IEventModuleStatic;
+    getModule (): IJson<IEventModuleStatic>;
+    getModule (name: TModuleName): IEventModuleStatic;
+    removeModule(name: TModuleName): void;
+    clearModule(): void;
 }
 ```
 
@@ -623,6 +637,36 @@ interface ILink {
     times: (times: number)=> ILink;
     listen: (listener?: IEventListener) => IEventItem;
 }
+```
+
+#### 4.21 事件模块
+
+1. createModule
+
+```js
+const result = [];
+const name = 'module_event';
+const moduleA = event.createModule('A');
+const moduleB = event.createModule('B');
+
+moduleA.regist(name, data => {result.push('A' + data);});
+moduleB.regist(name, data => {result.push('B' + data);});
+
+moduleA.emit(name, 1);
+moduleA.emit(name, 2);
+console.log(result);
+```
+
+2. getModule
+
+```js
+event.createModule('A');
+event.createModule('B');
+
+console.log([
+    event.getModule('A').moduleName,
+    event.getModule('B').moduleName,
+]);
 ```
 
 ### 5 ts 接口

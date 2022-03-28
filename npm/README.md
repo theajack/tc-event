@@ -1,23 +1,39 @@
 # [tc-event](https://www.github.com/theajack/tc-event)
 
 <p>
-    <a href="https://www.github.com/theajack/tc-event"><img src="https://img.shields.io/github/stars/theajack/tc-event.svg?style=social" alt="star"></a>
-    <a href="https://theajack.gitee.io"><img src="https://img.shields.io/badge/author-theajack-blue.svg?style=social" alt="Author"></a>
-</p> 
-
-<p>
-    <a href="https://www.npmjs.com/package/tc-event"><img src="https://img.shields.io/npm/v/tc-event.svg" alt="Version"></a>
-    <a href="https://npmcharts.com/compare/tc-event?minimal=true"><img src="https://img.shields.io/npm/dm/tc-event.svg" alt="Downloads"></a>
-    <a href="https://cdn.jsdelivr.net/npm/tc-event/tc-event.min.js"><img src="https://img.shields.io/bundlephobia/minzip/tc-event.svg" alt="Size"></a>
-    <a href="https://github.com/theajack/tc-event/blob/master/LICENSE"><img src="https://img.shields.io/npm/l/tc-event.svg" alt="License"></a>
-    <a href="https://github.com/theajack/tc-event/search?l=typescript"><img src="https://img.shields.io/github/languages/top/theajack/tc-event.svg" alt="TopLang"></a>
+    <a href="https://www.github.com/theajack/tc-event/stargazers" target="_black">
+        <img src="https://img.shields.io/github/stars/theajack/tc-event?logo=github" alt="stars" />
+    </a>
+    <a href="https://www.github.com/theajack/tc-event/network/members" target="_black">
+        <img src="https://img.shields.io/github/forks/theajack/tc-event?logo=github" alt="forks" />
+    </a>
+    <a href="https://www.npmjs.com/package/tc-event" target="_black">
+        <img src="https://img.shields.io/npm/v/tc-event?logo=npm" alt="version" />
+    </a>
+    <a href="https://www.npmjs.com/package/tc-event" target="_black">
+        <img src="https://img.shields.io/npm/dm/tc-event?color=%23ffca28&logo=npm" alt="downloads" />
+    </a>
+    <a href="https://www.jsdelivr.com/package/npm/tc-event" target="_black">
+        <img src="https://data.jsdelivr.com/v1/package/npm/tc-event/badge" alt="jsdelivr" />
+    </a>
     <a href="https://github.com/theajack/tc-event/issues"><img src="https://img.shields.io/github/issues-closed/theajack/tc-event.svg" alt="issue"></a>
+</p>
+<p>
+    <a href="https://github.com/theajack" target="_black">
+        <img src="https://img.shields.io/badge/Author-%20theajack%20-7289da.svg?&logo=github" alt="author" />
+    </a>
+    <a href="https://www.github.com/theajack/tc-event/blob/master/LICENSE" target="_black">
+        <img src="https://img.shields.io/github/license/theajack/tc-event?color=%232DCE89&logo=github" alt="license" />
+    </a>
+    <a href="https://cdn.jsdelivr.net/npm/tc-event/tc-event.min.js"><img src="https://img.shields.io/bundlephobia/minzip/tc-event.svg" alt="Size"></a>
+    <a href="https://github.com/theajack/tc-event/search?l=javascript"><img src="https://img.shields.io/github/languages/top/theajack/tc-event.svg" alt="TopLang"></a>
+    <a href="https://www.github.com/theajack/tc-event"><img src="https://img.shields.io/librariesio/dependent-repos/npm/tc-event.svg" alt="Dependent"></a>
     <a href="https://github.com/theajack/tc-event/blob/master/test/test-report.txt"><img src="https://img.shields.io/badge/test-passed-44BB44" alt="test"></a>
 </p>
 
 <h3>🚀 Powerful and easy-to-use event library</h3>
 
-**[中文](https://github.com/theajack/tc-event/blob/master/README.cn.md) | [Update Log](https://github.com/theajack/tc-event/blob/master/helper/version.md) | [Feedback bug](https://github.com/theajack/tc-event/issues/new) | [Gitee](https://gitee.com/theajack/tc-event)**
+**[Online Use](https://theajack.gitee.io/jsbox?github=theajack.tc-event) | [中文](https://github.com/theajack/tc-event/blob/master/README.cn.md) | [Update Log](https://github.com/theajack/tc-event/blob/master/helper/version.md) | [Feedback bug](https://github.com/theajack/tc-event/issues/new) | [Gitee](https://gitee.com/theajack/tc-event)**
 
 ---
 
@@ -28,6 +44,7 @@
 3. Custom event sequence, multiple trigger modes
 4. Global interception mechanism
 5. Small size, easy to use
+6. Support for creating modules to avoid event conflicts
 
 ### 2. Quick use
 
@@ -66,25 +83,37 @@ event.emit('myEvent', 'Aha!');
 For details, please refer to [index.d.ts](https://github.com/theajack/tc-event/blob/master/src/index.d.ts)
 
 ```ts
+interface IRegistMethod {
+    (eventName: TEventName, listener: IEventListener | IEventRegistOption): IEventItem;
+    (eventName: IRegistObject): IJson<IEventItem>;
+    // 链式调用
+    (eventName: TEventName): ILink;
+}
+interface IRemoveMethod {
+    (name: TEventName, cond: number | IEventListener, imme?: boolean): boolean;
+    (eventItem: IEventItem, imme?: boolean): boolean;
+}
 interface IEventStatic {
     version: string;
     EVENT: IJson<string>; // event enumeration
     emit(name: TEventName, data?: any): boolean; // trigger event
     onEmit(fn: IOnInterceptorEmit): void;
-    regist(name: TEventName, listener: IEventListener | IEventRegistOption): IEventItem;
-    regist(name: IRegistObject, listener: IEventListener | IEventRegistOption): IEventItem;
-    regist(name: IJson<IEventRegistOption>): IJson<IEventItem>;
-    regist(name: TEventName): ILink;
+    regist: IRegistMethod;
     onRegist(fn: IOnInterceptorRegist): void;
     checkEvent(name: TEventName): boolean; // Check if there is an event
-    remove(name: TEventName, cond: number | IEventListener, imme?: boolean): boolean;
-    remove(eventItem: IEventItem, imme?: boolean): boolean;
+    remove: IRemoveMethod;
     clear(name?: TEventName | TEventName[]): void;
     order(name: TEventName): number;
     registNotImmediate(name: TEventName, listener: IEventListener): IEventItem;
     registNotImmediateOnce(name: TEventName, listener: IEventListener): IEventItem;
     registOnce(name: TEventName, listener: IEventListener): IEventItem;
     registSingle(name: TEventName, listener: IEventListener): IEventItem;
+    // event module
+    createModule (name: TModuleName): IEventModuleStatic;
+    getModule (): IJson<IEventModuleStatic>;
+    getModule (name: TModuleName): IEventModuleStatic;
+    removeModule(name: TModuleName): void;
+    clearModule(): void;
 }
 ```
 
@@ -621,6 +650,36 @@ interface ILink {
     times: (times: number)=> ILink;
     listen: (listener?: IEventListener) => IEventItem;
 }
+```
+
+#### 4.21 event module
+
+1. createModule
+
+```js
+const result = [];
+const name = 'module_event';
+const moduleA = event.createModule('A');
+const moduleB = event.createModule('B');
+
+moduleA.regist(name, data => {result.push('A' + data);});
+moduleB.regist(name, data => {result.push('B' + data);});
+
+moduleA.emit(name, 1);
+moduleA.emit(name, 2);
+console.log(result);
+```
+
+2. getModule
+
+```js
+event.createModule('A');
+event.createModule('B');
+
+console.log([
+    event.getModule('A').moduleName,
+    event.getModule('B').moduleName,
+]);
 ```
 
 ### 5 ts interface

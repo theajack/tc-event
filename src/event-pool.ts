@@ -21,6 +21,8 @@ export function delEvent (eventName: TEventName) {
     delete EVENT[nameToStr(eventName)];
 }
 
+export function getEVENT(): IJson<string>;
+export function getEVENT(eventName: TEventName): string;
 export function getEVENT (eventName?: TEventName) {
     if (isUndf(eventName)) {
         return EVENT;

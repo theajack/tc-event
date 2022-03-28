@@ -1,4 +1,5 @@
 export type TEventName = string | number;
+export type TModuleName = string | number;
 
 export interface IEventListener {
     (data: any, listenOption: {
@@ -28,7 +29,7 @@ export interface IJson<T> {
 }
 
 export interface IRegistObject {
-    [key: string]: IEventRegistOption;
+    [key: string]: IEventListener | IEventRegistOption;
 }
 
 export interface IEventItem {
@@ -81,4 +82,61 @@ export interface ILink {
     tail: ()=> ILink;
     times: (times: number)=> ILink;
     listen: (listener?: IEventListener) => IEventItem;
+}
+
+export interface CEvent {
+    eventName: TEventName;
+    id: number;
+    hasTrigger: boolean;
+    order: number;
+    singleMode: boolean;
+    regist(options: IEventRegistOption): IEventItem;
+    emit(data?: any): boolean;
+    remove(cond: number | IEventListener, immediate?: boolean): boolean;
+    clear(): boolean;
+}
+
+export interface IRegistMethod {
+    (eventName: TEventName, listener: IEventListener | IEventRegistOption): IEventItem;
+    (eventName: IRegistObject): IJson<IEventItem>;
+    // 链式调用
+    (eventName: TEventName): ILink;
+}
+
+export interface IRemoveMethod {
+    (name: TEventName, cond: number | IEventListener, imme?: boolean): boolean;
+    (eventItem: IEventItem, imme?: boolean): boolean;
+}
+
+export interface IEventStaticBase {
+    version: string;
+    EVENT: IJson<string>; // 事件枚举
+    emit(name: TEventName, data?: any): boolean; // 触发事件
+    onEmit(fn: IOnInterceptorEmit): void;
+    // regist(
+    //     eventName: TEventName | IRegistObject,
+    //     listener?: IEventListener | IEventRegistOption
+    // ): IEventItem  | IJson<IEventItem> | ILink | null;
+    regist: IRegistMethod;
+    onRegist(fn: IOnInterceptorRegist): void;
+    checkEvent(name: TEventName): boolean; // 检查是否存在事件
+    remove: IRemoveMethod;
+    clear(name?: TEventName | TEventName[]): void;
+    order(name: TEventName): number;
+    registNotImmediate(name: TEventName, listener: IEventListener): IEventItem;
+    registNotImmediateOnce(name: TEventName, listener: IEventListener): IEventItem;
+    registOnce(name: TEventName, listener: IEventListener): IEventItem;
+    registSingle(name: TEventName, listener: IEventListener): IEventItem;
+}
+export interface IEventStatic extends IEventStaticBase {
+    createModule (name: TModuleName): IEventModuleStatic;
+    getModule (): IJson<IEventModuleStatic>;
+    getModule (name: TModuleName): IEventModuleStatic;
+    removeModule(name: TModuleName): void;
+    clearModule(): void;
+}
+
+export interface IEventModuleStatic extends IEventStaticBase {
+    moduleName: string | number;
+    buildEventName(eventName: TEventName): string;
 }
