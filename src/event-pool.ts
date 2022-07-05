@@ -1,12 +1,12 @@
 
 import {Event} from './event';
 import {clearInterceptor} from './interceptor';
-import {IJson, TEventName} from './type';
+import {IEventJson, TEventName} from './type';
 import {isUndf} from './util';
 
 
-let events: IJson<Event> = {}; // 事件回调函数字典
-let EVENT: IJson<string> = {}; // 事件名称字典
+let events: IEventJson<Event> = {}; // 事件回调函数字典
+let EVENT: IEventJson<string> = {}; // 事件名称字典
 
 export function getEvent (eventName: TEventName) {
     return events[nameToStr(eventName)];
@@ -21,7 +21,7 @@ export function delEvent (eventName: TEventName) {
     delete EVENT[nameToStr(eventName)];
 }
 
-export function getEVENT(): IJson<string>;
+export function getEVENT(): IEventJson<string>;
 export function getEVENT(eventName: TEventName): string;
 export function getEVENT (eventName?: TEventName) {
     if (isUndf(eventName)) {

@@ -1,6 +1,6 @@
 {
     "name": "tc-event",
-    "version": "0.0.7",
+    "version": "0.0.8",
     "description": "tc-event",
     "scripts": {
         "dev": "webpack-dev-server --open --config webpack-config/dev.js",

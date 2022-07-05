@@ -1,14 +1,6 @@
-import {
-    IRegistObject,
-    IEventListener, IEventRegistOption,
-    IEventItem, IEventStatic
-} from './type';
+import { IEventStatic } from './type';
 
-
-export {
-    IRegistObject, IEventListener,
-    IEventRegistOption, IEventItem
-};
+export * from './type'
 
 declare const event: IEventStatic;
 

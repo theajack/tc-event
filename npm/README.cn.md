@@ -69,9 +69,9 @@ event.emit('myEvent', 'Aha!');
 ```ts
 interface IRegistMethod {
     (eventName: TEventName, listener: IEventListener | IEventRegistOption): IEventItem;
-    (eventName: IRegistObject): IJson<IEventItem>;
+    (eventName: IRegistObject): IEventJson<IEventItem>;
     // 链式调用
-    (eventName: TEventName): ILink;
+    (eventName: TEventName): IEventLink;
 }
 interface IRemoveMethod {
     (name: TEventName, cond: number | IEventListener, imme?: boolean): boolean;
@@ -79,7 +79,7 @@ interface IRemoveMethod {
 }
 interface IEventStatic {
     version: string;
-    EVENT: IJson<string>; // 事件枚举
+    EVENT: IEventJson<string>; // 事件枚举
     emit(name: TEventName, data?: any): boolean; // 触发事件
     onEmit(fn: IOnInterceptorEmit): void;
     regist(name: TEventName, listener: IEventListener | IEventRegistOption): IEventItem;
@@ -95,7 +95,7 @@ interface IEventStatic {
     registSingle(name: TEventName, listener: IEventListener): IEventItem;
     // 事件模块
     createModule (name: TModuleName): IEventModuleStatic;
-    getModule (): IJson<IEventModuleStatic>;
+    getModule (): IEventJson<IEventModuleStatic>;
     getModule (name: TModuleName): IEventModuleStatic;
     removeModule(name: TModuleName): void;
     clearModule(): void;
@@ -623,18 +623,18 @@ event.regist('xxx')
 声明文件如下
 
 ```ts
-interface ILink {
-    single: (single: boolean) => ILink;
-    notImmediate: (immediate: boolean) => ILink;
-    once: (once: boolean) => ILink;
-    index: (index: number) => ILink;
-    order: (order: number) => ILink;
-    orderBefore: (orderBefore: boolean) => ILink;
-    listener: (listener: IEventListener) => ILink;
-    name: (name: string) => ILink;
-    head: () => ILink;
-    tail: ()=> ILink;
-    times: (times: number)=> ILink;
+interface IEventLink {
+    single: (single: boolean) => IEventLink;
+    notImmediate: (immediate: boolean) => IEventLink;
+    once: (once: boolean) => IEventLink;
+    index: (index: number) => IEventLink;
+    order: (order: number) => IEventLink;
+    orderBefore: (orderBefore: boolean) => IEventLink;
+    listener: (listener: IEventListener) => IEventLink;
+    name: (name: string) => IEventLink;
+    head: () => IEventLink;
+    tail: ()=> IEventLink;
+    times: (times: number)=> IEventLink;
     listen: (listener?: IEventListener) => IEventItem;
 }
 ```

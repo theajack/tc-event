@@ -1,7 +1,7 @@
-import {IEventRegistOption, TEventName, IEventListener, ILink} from './type';
+import {IEventRegistOption, TEventName, IEventListener, IEventLink} from './type';
 import {registBase} from './index';
 
-export function createEventLink (eventName: TEventName): ILink {
+export function createEventLink (eventName: TEventName): IEventLink {
     const options: IEventRegistOption & {
         eventName: TEventName;
     } = {

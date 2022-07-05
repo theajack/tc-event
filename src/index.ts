@@ -1,6 +1,6 @@
 
 import {isObject, isUndf} from './util';
-import {TEventName, IEventListener, IEventRegistOption, IEventItem, IRegistObject, IJson, ILink, IEventStatic} from './type';
+import {TEventName, IEventListener, IEventRegistOption, IEventItem, IRegistObject, IEventJson, IEventLink, IEventStatic} from './type';
 import {clearEvent, delEvent, getEVENT, getEvent, setEvent} from './event-pool';
 import version from './version';
 import {onRegist, onEmit} from './interceptor';
@@ -24,19 +24,19 @@ function init (eventName: TEventName) {
 
 // 注册某个事件的一个或多个回调
 function regist(eventName: TEventName, listener: IEventListener | IEventRegistOption): IEventItem;
-function regist(eventName: IRegistObject): IJson<IEventItem>;
+function regist(eventName: IRegistObject): IEventJson<IEventItem>;
 // 链式调用
-function regist(eventName: TEventName): ILink;
+function regist(eventName: TEventName): IEventLink;
 
 function regist (
     eventName: TEventName | IRegistObject,
     listener?: IEventListener | IEventRegistOption,
-): IEventItem | null | IJson<IEventItem> | ILink {
+): IEventItem | null | IEventJson<IEventItem> | IEventLink {
     // json 格式传入可以注册个事件
     if (isObject(eventName)) {
-        const result: IJson<IEventItem> = {};
+        const result: IEventJson<IEventItem> = {};
         for (const key in eventName as IRegistObject) {
-            result[key] = regist(key, (eventName as IJson<IEventRegistOption>)[key]) as IEventItem;
+            result[key] = regist(key, (eventName as IEventJson<IEventRegistOption>)[key]) as IEventItem;
         }
         return result;
     }

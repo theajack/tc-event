@@ -6,10 +6,10 @@
  * @Description: 事件模块
  */
 
-import {IEventItem, IEventListener, IEventModuleStatic, IEventRegistOption, IJson, ILink, IRegistMethod, IRegistObject, TEventName, TModuleName} from './type';
+import {IEventItem, IEventListener, IEventModuleStatic, IEventRegistOption, IEventJson, IEventLink, IRegistMethod, IRegistObject, TEventName, TModuleName} from './type';
 import event from './index';
 
-const moduleMap: IJson<IEventModuleStatic> = {};
+const moduleMap: IEventJson<IEventModuleStatic> = {};
 
 const PREFIX = '$TC_EM$_';
 
@@ -26,7 +26,7 @@ export function clearModule () {
     }
 }
 
-export function getModule (): IJson<IEventModuleStatic>;
+export function getModule (): IEventJson<IEventModuleStatic>;
 export function getModule (name: TModuleName): IEventModuleStatic;
 export function getModule (name?: TModuleName) {
     if (name) {
@@ -54,7 +54,7 @@ export function createModule (name: TModuleName): IEventModuleStatic {
         regist: ((
             eventName: TEventName | IRegistObject,
             listener?: IEventListener | IEventRegistOption,
-        ): IEventItem | null | IJson<IEventItem> | ILink => {
+        ): IEventItem | null | IEventJson<IEventItem> | IEventLink => {
             if (typeof eventName === 'object') {
                 const newArg: IRegistObject = {};
                 for (const key in eventName as IRegistObject) {
