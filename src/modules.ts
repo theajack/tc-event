@@ -1,7 +1,7 @@
 /*
  * @Author: tackchen
  * @Date: 2022-01-13 12:16:06
- * @LastEditors: tackchen
+ * @LastEditors: Please set LastEditors
  * @FilePath: /tc-event/src/modules.ts
  * @Description: 事件模块
  */
@@ -35,13 +35,40 @@ export function getModule (name?: TModuleName) {
     return moduleMap;
 }
 
+function createModuleNameManaer (name: TModuleName) {
+
+    const PrefixName = `${PREFIX}${name}`;
+    const en = (eventName: TEventName) => `${PrefixName}_${eventName}`; // 转换名称
+
+    const map: string[] = [];
+
+    return {
+        en,
+        registEN (name: TModuleName) {
+            name = en(name);
+            if (map.indexOf(name) === -1) map.push(name);
+            return name;
+        },
+        clearEN (name: TModuleName) {
+            name = en(name);
+            const index = map.indexOf(name);
+            if (index !== -1) map.splice(index, 1);
+            return name;
+        },
+        getENS () {
+            return map;
+        }
+    };
+
+}
+
 export function createModule (name: TModuleName): IEventModuleStatic {
     if (moduleMap[name]) {
         return moduleMap[name];
     }
-    const PrefixName = `${PREFIX}${name}`;
-    const en = (eventName: TEventName) => `${PrefixName}_${eventName}`;
     
+    const {en, registEN, clearEN, getENS} = createModuleNameManaer(name);
+
     moduleMap[name] = {
         moduleName: name,
         buildEventName: en,
@@ -58,11 +85,11 @@ export function createModule (name: TModuleName): IEventModuleStatic {
             if (typeof eventName === 'object') {
                 const newArg: IRegistObject = {};
                 for (const key in eventName as IRegistObject) {
-                    newArg[en(key)] = eventName[key];
+                    newArg[registEN(key)] = eventName[key];
                 }
                 return event.regist(newArg);
             } else if (typeof listener !== 'undefined') {
-                eventName = en(eventName) as TEventName;
+                eventName = registEN(eventName) as TEventName;
                 return event.regist(eventName, listener);
             }
             return event.regist(eventName);
@@ -83,9 +110,14 @@ export function createModule (name: TModuleName): IEventModuleStatic {
         },
         clear (name?: TEventName | TEventName[]) {
             if (typeof name === 'string' || typeof name === 'number') {
-                name = en(name);
+                name = clearEN(name);
             } else if (name instanceof Array) {
-                name = name.map(single => en(single));
+                name = name.map(single => clearEN(single));
+            } else if (typeof name === 'undefined') {
+                debugger;
+                return event.clear(getENS());
+            } else {
+                return false;
             }
             return event.clear(name);
         },
