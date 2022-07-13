@@ -27,6 +27,7 @@ startTest({
             log(`输出结果: ${JSON.stringify(item.result)}`);
             if (!item.passed) {
                 log(`期望结果: ${JSON.stringify(item.expect)}`);
+                throw new Error('Test Failed!');
             }
             log();
         });
@@ -40,7 +41,6 @@ startTest({
         
         fs.writeFileSync(path.resolve('./', 'test/test-report.json'), JSON.stringify(result, null, 4), 'utf8');
         fs.writeFileSync(path.resolve('./', 'test/test-report.txt'), txtContent, 'utf8');
-
     }
 });
 

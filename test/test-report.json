@@ -1,6 +1,6 @@
 {
     "passed": true,
-    "time": 8,
+    "time": 10,
     "results": [
         {
             "result": [
@@ -17,7 +17,7 @@
             ],
             "passed": true,
             "index": 0,
-            "time": 1,
+            "time": 2,
             "name": "测试别名函数"
         },
         {
@@ -53,7 +53,7 @@
             ],
             "passed": true,
             "index": 2,
-            "time": 0,
+            "time": 1,
             "name": "测试clear参数"
         },
         {
@@ -155,7 +155,7 @@
             ],
             "passed": true,
             "index": 7,
-            "time": 0,
+            "time": 1,
             "name": "测试链式调用"
         },
         {
@@ -187,7 +187,7 @@
             ],
             "passed": true,
             "index": 8,
-            "time": 4,
+            "time": 5,
             "name": "测试event时序"
         },
         {
@@ -201,7 +201,7 @@
             ],
             "passed": true,
             "index": 9,
-            "time": 0,
+            "time": 1,
             "name": "测试module"
         },
         {
@@ -229,7 +229,7 @@
             ],
             "passed": true,
             "index": 11,
-            "time": 1,
+            "time": 0,
             "name": "测试name"
         },
         {
@@ -249,7 +249,7 @@
             ],
             "passed": true,
             "index": 12,
-            "time": 0,
+            "time": 1,
             "name": "测试once参数"
         },
         {
@@ -365,7 +365,7 @@
             ],
             "passed": true,
             "index": 16,
-            "time": 0,
+            "time": 1,
             "name": "测试remove参数"
         },
         {
@@ -383,7 +383,7 @@
             ],
             "passed": true,
             "index": 17,
-            "time": 1,
+            "time": 0,
             "name": "测试single参数"
         },
         {

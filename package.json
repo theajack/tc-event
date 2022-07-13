@@ -1,23 +1,35 @@
 {
     "name": "tc-event",
-    "version": "0.0.8",
-    "description": "tc-event",
+    "version": "0.0.1",
+    "description": "Powerful, easy-to-use event mechanism",
+    "main": "tc-event.min.js",
+    "unpkg": "tc-event.min.js",
+    "jsdelivr": "tc-event.min.js",
+    "typings": "tc-event.min.d.ts",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/theajack/tc-event.git"
+    },
+    "keywords": [
+        "事件机制",
+        "事件总线",
+        "event mechanism"
+    ],
+    "author": "theajack",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/theajack/tc-event/issues"
+    },
+    "homepage": "https://shiyix.cn/jsbox/?github=theajack.tc-event",
+    "dependencies": {},
     "scripts": {
         "dev": "webpack-dev-server --open --config webpack-config/dev.js",
         "build": "webpack --config webpack-config/build.js",
         "lint": "eslint src --ext js",
-        "publish": "npm publish npm",
-        "test": "node test/index.js"
+        "test": "node test/index.js",
+        "purge": "node ./helper/purge-cdn.js",
+        "release": "node ./helper/push-release.js"
     },
-    "author": "theajack",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/theajack/tc-event"
-    },
-    "keywords": [
-        "tc-event"
-    ],
-    "license": "MIT",
     "devDependencies": {
         "@babel/core": "^7.6.4",
         "@babel/plugin-proposal-object-rest-spread": "^7.6.2",
