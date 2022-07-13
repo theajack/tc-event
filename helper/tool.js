@@ -72,7 +72,7 @@ function replaceFileContent (filePath, regExp, replacement) {
 
 function resolvePath (filePath) {
     if (filePath[0] === '@' || filePath[0] === '/') {
-        filePath = '../../' + filePath.substring(1);
+        filePath = '../' + filePath.substring(1);
     }
     return path.resolve(__dirname, filePath);
 }
@@ -112,7 +112,9 @@ function buildPackageJson (extract = {}) {
         npmPkg[key] = extract[key];
     }
 
-    writeJsonFile('npm/package.json', npmPkg);
+    mkdirDir('@npm');
+
+    writeJsonFile('@npm/package.json', npmPkg);
 }
 
 module.exports = {
