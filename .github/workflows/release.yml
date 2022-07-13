@@ -57,7 +57,7 @@ jobs:
           publish: true
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-      
+
       - name: Publish # npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPMJS_TOKEN }}
