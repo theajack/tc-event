@@ -61,7 +61,7 @@ jobs:
       - name: Publish # npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPMJS_TOKEN }}
-        run: npm publish npm
+        run: npm publish ./npm/
 
       - name: Purge # purge cdn
         run: npm run purge
