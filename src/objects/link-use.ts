@@ -1,7 +1,7 @@
-import {IEventRegistOption, TEventName, IEventListener, IEventLink} from './type';
-import {registBase} from './index';
+import {IEventRegistOption, TEventName, IEventListener, IEventLink} from '../type';
+import {EventEmitter} from './event-emiter';
 
-export function createEventLink (eventName: TEventName): IEventLink {
+export function createEventLink (eventName: TEventName, event: EventEmitter): IEventLink {
     const options: IEventRegistOption & {
         eventName: TEventName;
     } = {
@@ -57,7 +57,7 @@ export function createEventLink (eventName: TEventName): IEventLink {
             if (listener) {
                 options.listener = listener;
             }
-            return registBase(options);
+            return event.registObject(options);
         }
     };
 }

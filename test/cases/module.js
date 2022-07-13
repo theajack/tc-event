@@ -1,8 +1,8 @@
 /*
  * @Author: tackchen
  * @Date: 2022-03-28 09:45:36
- * @LastEditors: tackchen
- * @LastEditTime: 2022-03-28 10:04:16
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2022-07-13 23:12:14
  * @FilePath: /tc-event/test/cases/module.js
  * @Description: Coding something
  */
@@ -35,8 +35,8 @@ module.exports = [{
         event.createModule('B');
 
         return [
-            event.getModule('A').moduleName,
-            event.getModule('B').moduleName,
+            event.getModule('A').name,
+            event.getModule('B').name,
         ];
     },
     expect: ['A', 'B'],

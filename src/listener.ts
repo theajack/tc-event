@@ -1,9 +1,7 @@
-import {Event} from './event';
-import {getEvent} from './event-pool';
-import {triggerOnEmit} from './interceptor';
-import {IEventItem, IEventRegistOption} from './type';
+import {EventItem} from './objects/event';
+import {IListenerItem, IEventRegistOption, IEventEmitter, CEvent} from './type';
 
-export function createListener (event: Event, {
+export function createListener (event: EventItem, {
     listener,
     immediate = true,
     once = false,
@@ -13,7 +11,7 @@ export function createListener (event: Event, {
     head = false,
     tail = false,
     times = -1,
-}: IEventRegistOption & {order: number}): IEventItem {
+}: IEventRegistOption & {order: number}): IListenerItem {
     const id = ++ event.id;
     if (once) { times = 1; }
     return {
@@ -34,7 +32,12 @@ export function createListener (event: Event, {
     };
 }
 
-export function triggerListenerItem (listenerItem?: IEventItem, data?: any, firstEmit?: boolean) {
+export function triggerListenerItem (
+    parent: IEventEmitter,
+    listenerItem?: IListenerItem,
+    data?: any,
+    firstEmit?: boolean
+) {
     if (!listenerItem || listenerItem.timesLeft === 0) return;
     listenerItem.hasTrigger = true;
 
@@ -42,7 +45,7 @@ export function triggerListenerItem (listenerItem?: IEventItem, data?: any, firs
         listenerItem.timesLeft --;
     }
 
-    const event = getEvent(listenerItem.eventName);
+    const event = parent.getEvent(listenerItem.eventName);
 
     if (typeof firstEmit === 'undefined') {
         firstEmit = event.hasTrigger === false;
@@ -53,7 +56,7 @@ export function triggerListenerItem (listenerItem?: IEventItem, data?: any, firs
         event
     });
     listenerItem.listener(data, emitOption);
-    triggerOnEmit({
+    parent.interceptor.triggerOnEmit({
         eventName: event.eventName, data, ...emitOption
     });
 }
@@ -62,8 +65,8 @@ function buildListenOption ({
     firstEmit, item, event
 }: {
     firstEmit: boolean;
-    item: IEventItem;
-    event: Event;
+    item: IListenerItem;
+    event: CEvent;
 }) {
     return {
         firstEmit,

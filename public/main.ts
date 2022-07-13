@@ -1,7 +1,6 @@
 // import event from '../npm';
 import event from '../src';
 
-
 function registEvent () {
     const e1 = event.regist('aa', () => {
         console.log('1');

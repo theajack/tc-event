@@ -1,4 +1,4 @@
-import {IEventItem} from './type';
+import {IListenerItem} from './type';
 import {findPos} from './util';
 
 export function countInsertIndex ({
@@ -6,7 +6,7 @@ export function countInsertIndex ({
     eventOrder,
     index, order, orderBefore = false, head, tail
 }: {
-    listeners: Array<IEventItem | undefined>,
+    listeners: Array<IListenerItem | undefined>,
     eventOrder: number,
     index?: number; order?: number; orderBefore: boolean; head: boolean, tail: boolean
 }) {
@@ -45,10 +45,10 @@ export function countInsertIndex ({
     return {insertIndex, order, needAddOrder};
 }
 
-function findLastOrder (listeners: Array<IEventItem | undefined>) {
+function findLastOrder (listeners: Array<IListenerItem | undefined>) {
     for (let i = listeners.length - 1; i >= 0; i--) {
         if (listeners[i]) {
-            return (listeners[i] as IEventItem).order;
+            return (listeners[i] as IListenerItem).order;
         }
     }
     return 0;

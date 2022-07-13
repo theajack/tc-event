@@ -1,18 +1,18 @@
 
 // 事件类
 
-import {createLocker} from './locker';
-import {TEventName, IEventListener, IEventItem, ILockerFn, IEventRegistOption, CEvent} from './type';
-import {triggerOnRegist} from './interceptor';
-import {createListener, triggerListenerItem} from './listener';
-import {countInsertIndex} from './listeners';
+import {createLocker} from '../locker';
+import {TEventName, IEventListener, IListenerItem, ILockerFn, IEventRegistOption, CEvent} from '../type';
+import {createListener, triggerListenerItem} from '../listener';
+import {countInsertIndex} from '../listeners';
+import {IEventEmitter} from 'src/type';
 
-
-export class Event implements CEvent {
+export class EventItem implements CEvent {
+    parent: IEventEmitter;
     eventName: TEventName;
     id: number;
     hasTrigger: boolean;
-    private listeners: Array<IEventItem | undefined>;
+    private listeners: Array<IListenerItem | undefined>;
     order: number;
     private _triggerData: any;
     private _locker: {
@@ -20,8 +20,9 @@ export class Event implements CEvent {
         lock (fn: () => boolean): boolean;
     };
     singleMode: boolean;
-    constructor (eventName: TEventName) {
+    constructor (eventName: TEventName, parent: IEventEmitter) {
         // 对于ready之类的事件 增加一个如果已经触发了就马上执行的逻辑
+        this.parent = parent;
         this.eventName = eventName;
         this._init();
     }
@@ -71,15 +72,16 @@ export class Event implements CEvent {
         const item = createListener(this, {
             listener, immediate, once, order, orderBefore, name, head, tail, times,
         });
-        
-        triggerOnRegist({eventName: this.eventName, item});
+
+        this.parent.interceptor.triggerOnRegist({eventName: this.eventName, item});
 
         this._locker.add({
             index: insertIndex,
             func: () => {this.listeners.splice(insertIndex, 0, item);}
         });
+
         if (immediate && this.hasTrigger) {
-            triggerListenerItem(item, this._triggerData);
+            triggerListenerItem(this.parent, item, this._triggerData);
         }
         return item;
     }
@@ -90,11 +92,12 @@ export class Event implements CEvent {
             const firstEmit = this.hasTrigger === false;
             if (!this.hasTrigger) {this.hasTrigger = true;}
             for (let i = 0; i < this.listeners.length; i++) {
-                triggerListenerItem(this.listeners[i], data, firstEmit);
+                triggerListenerItem(this.parent, this.listeners[i], data, firstEmit);
             }
             return firstEmit;
         });
     }
+
     remove (cond: number | IEventListener, immediate: boolean = false) {
         let index: number;
         if (this.singleMode) {

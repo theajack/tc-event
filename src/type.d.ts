@@ -4,7 +4,7 @@ export type TModuleName = string | number;
 export interface IEventListener {
     (data: any, listenOption: {
         firstEmit: boolean;
-        item: IEventItem;
+        item: IListenerItem;
         remove: () => boolean;
         clear: () => boolean;
     }): void;
@@ -32,7 +32,7 @@ export interface IRegistObject {
     [key: string]: IEventListener | IEventRegistOption;
 }
 
-export interface IEventItem {
+export interface IListenerItem {
     eventName: TEventName;
     listener: IEventListener;
     immediate: boolean;
@@ -54,7 +54,7 @@ export interface ILockerFn {index: number, func:()=>any}
 export interface IOnInterceptorRegist {
     (data: {
         eventName: TEventName,
-        item: IEventItem
+        item: IListenerItem
     }): void
 }
 
@@ -63,7 +63,7 @@ export interface IOnInterceptorEmit {
         eventName: TEventName;
         data: any;
         firstEmit: boolean;
-        item: IEventItem;
+        item: IListenerItem;
         remove: () => boolean;
         clear: () => boolean;
     }): void
@@ -81,7 +81,7 @@ export interface IEventLink {
     head: () => IEventLink;
     tail: ()=> IEventLink;
     times: (times: number)=> IEventLink;
-    listen: (listener?: IEventListener) => IEventItem;
+    listen: (listener?: IEventListener) => IListenerItem;
 }
 
 export interface CEvent {
@@ -90,53 +90,59 @@ export interface CEvent {
     hasTrigger: boolean;
     order: number;
     singleMode: boolean;
-    regist(options: IEventRegistOption): IEventItem;
+    regist(options: IEventRegistOption): IListenerItem;
     emit(data?: any): boolean;
     remove(cond: number | IEventListener, immediate?: boolean): boolean;
     clear(): boolean;
 }
 
 export interface IRegistMethod {
-    (eventName: TEventName, listener: IEventListener | IEventRegistOption): IEventItem;
-    (eventName: IRegistObject): IEventJson<IEventItem>;
+    (eventName: TEventName, listener: IEventListener | IEventRegistOption): IListenerItem;
+    (eventName: IRegistObject): IEventJson<IListenerItem>;
     // 链式调用
     (eventName: TEventName): IEventLink;
 }
 
 export interface IRemoveMethod {
     (name: TEventName, cond: number | IEventListener, imme?: boolean): boolean;
-    (eventItem: IEventItem, imme?: boolean): boolean;
+    (eventItem: IListenerItem, imme?: boolean): boolean;
 }
 
-export interface IEventStaticBase {
-    version: string;
-    EVENT: IEventJson<string>; // 事件枚举
+export interface IEventInterceptor {
+    onRegist (fn: IOnInterceptorRegist): void;
+    triggerOnRegist: IOnInterceptorRegist;
+    onEmit (fn: IOnInterceptorEmit): void;
+    triggerOnEmit: IOnInterceptorEmit;
+    clearInterceptor (): void;
+}
+
+export interface IEventEmitter {
+    removed: boolean;
+    interceptor: IEventInterceptor;
+    name: string;
+    getEventNames(): string[]; // 事件枚举
+    getEvent(): IEventJson<CEvent>;
+    getEvent(name: TEventName): CEvent;
     emit(name: TEventName, data?: any): boolean; // 触发事件
     onEmit(fn: IOnInterceptorEmit): void;
-    // regist(
-    //     eventName: TEventName | IRegistObject,
-    //     listener?: IEventListener | IEventRegistOption
-    // ): IEventItem  | IEventJson<IEventItem> | IEventLink | null;
     regist: IRegistMethod;
+    registObject(options: IEventRegistOption & {eventName: TEventName}): IListenerItem;
     onRegist(fn: IOnInterceptorRegist): void;
     checkEvent(name: TEventName): boolean; // 检查是否存在事件
     remove: IRemoveMethod;
     clear(name?: TEventName | TEventName[]): void;
     order(name: TEventName): number;
-    registNotImmediate(name: TEventName, listener: IEventListener): IEventItem;
-    registNotImmediateOnce(name: TEventName, listener: IEventListener): IEventItem;
-    registOnce(name: TEventName, listener: IEventListener): IEventItem;
-    registSingle(name: TEventName, listener: IEventListener): IEventItem;
-}
-export interface IEventStatic extends IEventStaticBase {
-    createModule (name: TModuleName): IEventModuleStatic;
-    getModule (): IEventJson<IEventModuleStatic>;
-    getModule (name: TModuleName): IEventModuleStatic;
-    removeModule(name: TModuleName): void;
-    clearModule(): void;
+    registNotImmediate(name: TEventName, listener: IEventListener): IListenerItem;
+    registNotImmediateOnce(name: TEventName, listener: IEventListener): IListenerItem;
+    registOnce(name: TEventName, listener: IEventListener): IListenerItem;
+    registSingle(name: TEventName, listener: IEventListener): IListenerItem;
 }
 
-export interface IEventModuleStatic extends IEventStaticBase {
-    moduleName: string | number;
-    buildEventName(eventName: TEventName): string;
+export interface IEventStatic extends IEventEmitter {
+    version: string;
+    createModule (name: TModuleName): IEventEmitter;
+    getModule (): IEventJson<IEventEmitter>;
+    getModule (name: TModuleName): IEventEmitter;
+    removeModule(name: TModuleName): void;
+    clearModule(): void;
 }

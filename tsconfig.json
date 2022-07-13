@@ -25,7 +25,7 @@
     },
     "include": [
         "./src/*"
-    ],
+, "src/objects/event-emiter.ts", "src/objects/interceptor.ts"    ],
     "exclude": [
         "./node_modules"
     ]
