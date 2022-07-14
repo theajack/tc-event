@@ -3,10 +3,14 @@ tag-template: 'v$RESOLVED_VERSION'
 template: |
   # What's Changed
 
+  $CHANGES
+  
   ### [Version Log](https://github.com/theajack/tc-event/blob/master/helper/version.md)
 
   **Full Changelog**: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
 
+  $CONTRIBUTORS
+  
 categories:
   - title: 'Breaking'
     label: 'type: breaking'

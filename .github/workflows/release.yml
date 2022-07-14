@@ -50,6 +50,18 @@ jobs:
       - name: Test
         run: npm run test
 
+
+      # - name: Build Changelog
+      #   id: build_changelog
+      #   uses: mikepenz/release-changelog-builder-action@{latest-release}
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # - name: Create Release
+      #   uses: softprops/action-gh-release@v0.1.14
+      #   with:
+      #     body: ${{steps.github_release.outputs.changelog}}
+          
       - name: Release # release
         uses: release-drafter/release-drafter@v5
         with:
@@ -63,5 +75,5 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPMJS_TOKEN }}
         run: npm publish ./npm/
 
-      - name: Purge # purge cdn
+      - name: Purge CDN # purge cdn
         run: npm run purge
