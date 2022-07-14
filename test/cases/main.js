@@ -4,7 +4,7 @@ module.exports = {
     async test ({event, lib}) {
         event.clear();
         const eventName = 'test';
-        return await lib.promise((resolve) => {
+        return new Promise((resolve) => {
             const result = [];
             lib.registInterceptor({
                 event,

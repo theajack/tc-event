@@ -11,6 +11,8 @@ import {GlobalEventInterceptor} from './interceptor';
 
 const DefaultEventEmitter = new EventEmitter();
 
+(GlobalEventInterceptor as any).id = 'g';
+
 DefaultEventEmitter.interceptor = GlobalEventInterceptor;
 
 const moduleMap: IEventJson<IEventEmitter> = {};

@@ -1,12 +1,6 @@
 
-function promise (fn) {
-    return new Promise(res => {
-        fn(res);
-    });
-}
-
 function delay (time = 50) {
-    return promise((resolve) => {
+    return new Promise((resolve) => {
         setTimeout(resolve, time);
     });
 }
@@ -30,5 +24,5 @@ function registInterceptor ({event, eventName, done}) {
 }
 
 module.exports = {
-    delay, registInterceptor, promise
+    delay, registInterceptor
 };

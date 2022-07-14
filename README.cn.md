@@ -67,23 +67,17 @@ event.emit('myEvent', 'Aha!');
 详情请参考 [index.d.ts](https://github.com/theajack/tc-event/blob/master/src/index.d.ts)
 
 ```ts
-interface IRegistMethod {
-    (eventName: TEventName, listener: IEventListener | IEventRegistOption): IListenerItem;
-    (eventName: IRegistObject): IEventJson<IListenerItem>;
-    // 链式调用
-    (eventName: TEventName): IEventLink;
-}
-interface IRemoveMethod {
-    (name: TEventName, cond: number | IEventListener, imme?: boolean): boolean;
-    (eventItem: IListenerItem, imme?: boolean): boolean;
-}
-interface IEventStatic {
-    version: string;
-    EVENT: IEventJson<string>; // 事件枚举
+export interface IEventEmitter {
+    removed: boolean;
+    interceptor: IEventInterceptor;
+    name: string;
+    getEventNames(): string[]; // 事件枚举
+    getEvent(): IEventJson<CEvent>;
+    getEvent(name: TEventName): CEvent;
     emit(name: TEventName, data?: any): boolean; // 触发事件
     onEmit(fn: IOnInterceptorEmit): void;
-    regist(name: TEventName, listener: IEventListener | IEventRegistOption): IListenerItem;
     regist: IRegistMethod;
+    registObject(options: IEventRegistOption & {eventName: TEventName}): IListenerItem;
     onRegist(fn: IOnInterceptorRegist): void;
     checkEvent(name: TEventName): boolean; // 检查是否存在事件
     remove: IRemoveMethod;
@@ -93,10 +87,13 @@ interface IEventStatic {
     registNotImmediateOnce(name: TEventName, listener: IEventListener): IListenerItem;
     registOnce(name: TEventName, listener: IEventListener): IListenerItem;
     registSingle(name: TEventName, listener: IEventListener): IListenerItem;
-    // 事件模块
-    createModule (name: TModuleName): IEventModuleStatic;
-    getModule (): IEventJson<IEventModuleStatic>;
-    getModule (name: TModuleName): IEventModuleStatic;
+}
+
+export interface IEventStatic extends IEventEmitter {
+    version: string;
+    createModule (name: TModuleName): IEventEmitter;
+    getModule (): IEventJson<IEventEmitter>;
+    getModule (name: TModuleName): IEventEmitter;
     removeModule(name: TModuleName): void;
     clearModule(): void;
 }
@@ -667,56 +664,4 @@ console.log([
     event.getModule('A').moduleName,
     event.getModule('B').moduleName,
 ]);
-```
-
-### 5 ts 接口
-
- 1. IEventRegistOption
- 2. IRegistObject
- 3. IEventListener
- 5. IListenerItem
-
-详情请参考 [index.d.ts](https://github.com/theajack/tc-event/blob/master/src/index.d.ts)
-
-```ts
-export interface IEventRegistOption {
-    listener: IEventListener;
-    immediate?: boolean;
-    once?: boolean;
-    times?: number;
-    order?: number;
-    orderBefore?: boolean;
-    index?: number;
-    single?: boolean;
-    head?: boolean;
-    tail?: boolean;
-    name?: string;
-}
-export interface IRegistObject {
-    [key: string]: IEventRegistOption;
-}
-export interface IEventListener {
-    (data: any, listenOption: {
-        firstEmit: boolean;
-        item: IListenerItem;
-        remove: () => boolean;
-        clear: () => boolean;
-    }): void;
-}
-export interface IListenerItem {
-    eventName: TEventName;
-    listener: IEventListener;
-    immediate: boolean;
-    once: boolean;
-    order: number;
-    orderBefore: boolean;
-    hasTrigger: boolean;
-    id: number;
-    single: boolean;
-    name: string;
-    head: boolean;
-    tail: boolean;
-    times: number;
-    timesLeft: number;
-}
 ```

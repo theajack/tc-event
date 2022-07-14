@@ -19,7 +19,7 @@ export class EventInterceptor {
     }
     triggerOnEmit: IOnInterceptorEmit = (option) => {
         if (this !== GlobalEventInterceptor) {
-            GlobalEventInterceptor.triggerOnRegist(option);
+            GlobalEventInterceptor.triggerOnEmit(option);
         }
         this._onEmit.forEach(fn => {fn(option);});
     }
