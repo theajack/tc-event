@@ -11,6 +11,8 @@ import {GlobalEventInterceptor} from './interceptor';
 
 const DefaultEventEmitter = new EventEmitter();
 
+export function getDefaultEventEmitter () {return DefaultEventEmitter;}
+
 (GlobalEventInterceptor as any).id = 'g';
 
 DefaultEventEmitter.interceptor = GlobalEventInterceptor;
@@ -41,8 +43,12 @@ export function getModule (name?: TModuleName) {
     return moduleMap;
 }
 
-export function createModule (name?: TModuleName): IEventEmitter {
-    if (typeof name === 'undefined') return DefaultEventEmitter;
+export function createModule (name: TModuleName): IEventEmitter {
+    // if (typeof name === 'undefined') return DefaultEventEmitter;
+    if (!name) {
+        throw new Error('Name is required, if you want to create module without name, please use new EventEmitter()');
+    }
+
     if (!moduleMap[name]) {
         moduleMap[name] = new EventEmitter(name);
     }

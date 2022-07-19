@@ -1,9 +1,14 @@
+/*
+ * @Author: tackchen
+ * @Date: 2022-07-19 11:10:25
+ */
 import {IEventStatic, IRegistMethod, TEventName} from './type';
-import {clearModule, createModule, getModule, removeModule} from './objects/modules';
+import {clearModule, createModule, getDefaultEventEmitter, getModule, removeModule} from './objects/modules';
 import version from './version';
+import {EventEmitter} from './objects/event-emiter';
 export {GlobalEventInterceptor} from './objects/interceptor';
 
-const DefaultEvent = createModule() as any as IEventStatic;
+const DefaultEvent = getDefaultEventEmitter() as any as IEventStatic;
 
 DefaultEvent.version = version;
 
@@ -22,6 +27,7 @@ export {
     getModule,
     clearModule,
     removeModule,
+    EventEmitter,
 };
 
 export const regist = ((eventName: string, listener?: any) => {
