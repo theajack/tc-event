@@ -1,3 +1,8 @@
+/*
+ * @Author: tackchen
+ * @Date: 2022-07-19 19:33:11
+ * @Description: Coding something
+ */
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const fs = require('fs');

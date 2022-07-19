@@ -1,4 +1,24 @@
-// import event from '../npm';
+/*
+ * @Author: tackchen
+ * @Date: 2022-07-19 19:48:53
+ * @Description: Coding something
+ */
+
+
+// import event, {EventEmitter, getModule} from '../npm';
+// console.log('event', event);
+// console.log('getModule', getModule);
+// console.log('EventEmitter', EventEmitter);
+
+// const e = new EventEmitter();
+
+// e.regist('aa', (a) => {console.log('EventEmitter', a);});
+// event.regist('aa', (a) => {console.log('event', a);});
+
+// e.emit('aa', 11111);
+// event.emit('aa', 22222);
+
+
 import event from '../src';
 
 function registEvent () {

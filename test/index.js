@@ -1,4 +1,10 @@
+/*
+ * @Author: tackchen
+ * @Date: 2022-07-19 19:24:27
+ * @Description: Coding something
+ */
 const event = require('../npm/tc-event.min');
+const {EventEmitter} = require('../npm/tc-event.min');
 const {startTest} = require('easy-test-lib');
 const fs = require('fs');
 const path = require('path');
@@ -6,7 +12,7 @@ const getAllCases = require('./get-cases');
 const lib = require('./lib');
 
 startTest({
-    args: {event, lib},
+    args: {event, lib, EventEmitter},
     cases: getAllCases(),
     onTestComplete (result) { // 测试全部完成回调 可选
         let txtContent = '';

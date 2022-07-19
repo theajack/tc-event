@@ -112,6 +112,7 @@ export interface IEventStatic extends IEventEmitter {
     getModule (name: TModuleName): IEventEmitter;
     removeModule(name: TModuleName): void;
     clearModule(): void;
+    EventEmitter: typeof EventEmitter;
 }
 ```
 
